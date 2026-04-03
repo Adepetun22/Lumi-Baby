@@ -118,7 +118,6 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
 function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
     <div className={`fixed inset-0 z-[999] bg-warm-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-9 py-[90px] overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-      <button className="absolute top-6 right-6 w-11 h-11 rounded-full bg-charcoal/5 border-none cursor-pointer text-lg flex items-center justify-center" onClick={onClose}>✕</button>
       
       {/* Mobile Search Input */}
       <div className="mobile-search mb-6">
@@ -219,7 +218,7 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
           {/* Hamburger */}
           <button 
             className="hamburger"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => setMobileMenuOpen(o => !o)}
           >
             <span></span><span></span><span></span>
           </button>
