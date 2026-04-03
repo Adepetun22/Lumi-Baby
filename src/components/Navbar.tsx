@@ -83,18 +83,22 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
 
   if (!megaType) {
     return (
-      <a href="#" onClick={onClose} className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">{label}</a>
+      <a
+        href="#"
+        onClick={onClose}
+        className={`block font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
+      >{label}</a>
     );
   }
 
   return (
-    <div className="border-b border-charcoal/5">
+    <div>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between font-display text-3xl font-light text-charcoal py-3 transition-colors duration-200 hover:text-clay"
+        className={`mobile-nav-btn w-full flex items-center justify-between font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
       >
         {label}
-        <span className={`text-clay text-2xl transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>+</span>
+        <span className={`text-clay text-2xl transition-transform duration-300 flex-shrink-0 ${open ? 'rotate-45' : ''}`}>+</span>
       </button>
       <div className={`overflow-hidden transition-all duration-400 ease-in-out ${open ? 'max-h-[600px] pb-4' : 'max-h-0'}`}>
         {content[megaType].map((col, i) => (
