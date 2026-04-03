@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface NavbarProps {
   isScrolled: boolean;
@@ -59,6 +59,57 @@ function MegaMenu({ type = 'feeding' }: { type?: 'feeding' | 'diapering' | 'nurs
   );
 }
 
+// Mobile Nav Item with optional accordion mega menu
+function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?: 'feeding' | 'diapering' | 'nursery'; onClose: () => void }) {
+  const [open, setOpen] = useState(false);
+
+  const content = {
+    feeding: [
+      { title: 'Breast Feeding', items: ['Breast Pumps', 'Nursing Pads', 'Nipple Cream', 'Nursing Bras'] },
+      { title: 'Bottle Feeding', items: ['Baby Bottles', 'Formula Dispensers', 'Bottle Warmers', 'Sterilizers'] },
+      { title: 'Solid Foods', items: ['High Chairs', 'Baby Food Makers', 'Bibs & Burp Cloths', 'Suction Bowls'] },
+    ],
+    diapering: [
+      { title: 'Diapers', items: ['Disposable Diapers', 'Cloth Diapers', 'Swim Diapers'] },
+      { title: 'Changing', items: ['Changing Tables', 'Changing Pads', 'Diaper Bags'] },
+      { title: 'Wipes & Creams', items: ['Baby Wipes', 'Diaper Cream', 'Powder'] },
+    ],
+    nursery: [
+      { title: 'Sleep', items: ['Cribs & Bassinets', 'Baby Monitors', 'Sleep Sacks'] },
+      { title: 'Décor', items: ['Wall Art', 'Mobiles', 'Night Lights'] },
+      { title: 'Storage', items: ['Dressers', 'Toy Boxes', 'Closet Organizers'] },
+    ],
+  };
+
+  if (!megaType) {
+    return (
+      <a href="#" onClick={onClose} className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">{label}</a>
+    );
+  }
+
+  return (
+    <div className="border-b border-charcoal/5">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between font-display text-3xl font-light text-charcoal py-3 transition-colors duration-200 hover:text-clay"
+      >
+        {label}
+        <span className={`text-clay text-2xl transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>+</span>
+      </button>
+      <div className={`overflow-hidden transition-all duration-400 ease-in-out ${open ? 'max-h-[600px] pb-4' : 'max-h-0'}`}>
+        {content[megaType].map((col, i) => (
+          <div key={i} className="mb-4">
+            <h4 className="font-display text-base font-medium text-clay mb-2 border-b border-clay/20 pb-1">{col.title}</h4>
+            {col.items.map((item, j) => (
+              <a key={j} href="#" className="block text-sm text-muted no-underline py-1 transition-all duration-200 hover:text-clay hover:pl-1.5">{item}</a>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Mobile Menu Component
 function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
@@ -79,12 +130,12 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
         </div>
       </div>
       
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Feeding</a>
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Diapering</a>
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Nursery</a>
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Toys</a>
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Clothing</a>
-      <a href="#" className="block font-display text-3xl font-light text-charcoal no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 hover:text-clay hover:pl-2">Gifts</a>
+      <MobileNavItem label="Feeding" megaType="feeding" onClose={onClose} />
+      <MobileNavItem label="Diapering" megaType="diapering" onClose={onClose} />
+      <MobileNavItem label="Nursery" megaType="nursery" onClose={onClose} />
+      <MobileNavItem label="Toys" onClose={onClose} />
+      <MobileNavItem label="Clothing" onClose={onClose} />
+      <MobileNavItem label="Gifts" onClose={onClose} />
       <div className="mt-8 flex gap-4">
         <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">My Account</a>
         <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">Cart (0)</a>
