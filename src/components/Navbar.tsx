@@ -9,7 +9,7 @@ interface NavbarProps {
 
 // Nav Item with Mega Menu
 function NavItem({ label, isScrolled, children }: { label: string; isScrolled: boolean; children?: React.ReactNode }) {
-  const textColor = isScrolled ? 'text-muted' : 'text-white/85';
+  const textColor = isScrolled ? 'text-black' : 'text-black';
 
   return (
     <div className="nav-item">
@@ -158,7 +158,7 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
   }, [setIsScrolled]);
 
   const navBg = isScrolled ? 'bg-cream/95 backdrop-blur-sm shadow-sm' : 'bg-transparent';
-  const textColor = isScrolled ? 'text-charcoal' : 'text-white';
+  const textColor = isScrolled ? 'text-black' : 'text-black';
   const accentColor = isScrolled ? 'text-clay' : 'text-blush';
   const searchBg = isScrolled ? 'bg-clay/10 border-clay/20' : 'bg-white/15 border-white/30';
 
@@ -202,14 +202,14 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
 
           {/* User Icon */}
           <button className="nav-icon">
-            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
             </svg>
           </button>
 
           {/* Cart Icon */}
           <button className="nav-icon">
-            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
             <span className="cart-badge">3</span>
@@ -218,7 +218,7 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
           {/* Hamburger */}
           <button 
             className="hamburger"
-            onClick={() => setMobileMenuOpen(o => !o)}
+            onClick={() => setMobileMenuOpen((o: boolean) => !o)}
           >
             <span></span><span></span><span></span>
           </button>
