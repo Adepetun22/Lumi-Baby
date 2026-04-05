@@ -1,9 +1,15 @@
-# QuickView Quantity Buttons & Dynamic Price Task
+# QuickViewModal Creation TODO
 
-## Steps:
-- [x] Step 1: Update QuickViewModal price display to scale with quantity (qty * product.price)
-- [x] Step 2: Test QuickView functionality after edit
-- [x] Step 3: Verify Navbar cart count reflects changes (CartContext handles this via useCart hook)
-- [x] Step 4: Complete task with attempt_completion
+## Plan Summary
+Extract inline QuickViewModal from productlisting.tsx to src/components/Product/QuickViewModal.tsx. Update import/usage. Maintain all functions.
 
-Current file: src/pages/productlisting.tsx
+## Steps (2/5 complete)
+- [x] 1. Create src/components/Product/QuickViewModal.tsx ✓ (ESLint fixed)
+- [x] 2. Update src/pages/productlisting.tsx: Remove inline QuickViewModal, import new component ✓
+- [ ] 3. Test modal functionality (open/close, cart add, responsive).
+- [ ] 4. Verify no regressions in productlisting.tsx (filters, infinite scroll).
+- [ ] 5. (Optional) Extend ProductCard.tsx support if needed.
+
+**Next: Manual verification steps 3-4 (run dev server, test products page). Task complete once confirmed functional.**
+
+**Run: npm run dev**
