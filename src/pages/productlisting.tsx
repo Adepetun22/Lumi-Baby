@@ -170,16 +170,17 @@ function QuickViewModal({
   product, 
   isOpen, 
   onClose,
-  onQtyChange,
-  cartCounts 
+  cartCounts,
+  increment
 }: { 
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
-  onQtyChange: (id: number, delta: number) => void;
   cartCounts: Record<number, number>;
+  increment: (id: number) => void;
 }) {
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [localQty, setLocalQty] = useState(1);
 
   useEffect(() => {
     if (isOpen) {
@@ -217,9 +218,10 @@ function QuickViewModal({
     };
     return gradients[bg] || 'from-[#FDE8E0] to-[#F2C4B2]';
   };
-  const bgGradient = getBgGradient(product.bg);
-  const qty = cartCounts[product.id] || 0;
-  const savings = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+const bgGradient = getBgGradient(product.bg);
+const totalPrice = localQty * product.price;
+  const totalOldPrice = localQty * (product.oldPrice || 0);
+  const savings = totalOldPrice > 0 ? Math.round((1 - totalPrice / totalOldPrice) * 100) : 0;
 
   return (
     <div 
@@ -283,10 +285,10 @@ function QuickViewModal({
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-[28px] font-medium text-charcoal">${product.price}.00</span>
+  <span className="text-[28px] font-medium text-charcoal">${(localQty * product.price).toLocaleString()}.00</span>
             {product.oldPrice && (
               <>
-                <span className="text-[16px] text-muted line-through">${product.oldPrice}</span>
+<span className="text-[16px] text-muted line-through">${(localQty * (product.oldPrice || 0)).toLocaleString()}</span>
                 <span className="px-2.5 py-1 bg-clay-light text-clay rounded-[6px] text-[12px] font-semibold">Save {savings}%</span>
               </>
             )}
@@ -296,25 +298,31 @@ function QuickViewModal({
             <div className="flex items-center gap-0 bg-clay rounded-full overflow-hidden">
               <button 
                 className="w-8 h-8 border-none bg-transparent text-white text-[18px] cursor-pointer flex items-center justify-center hover:bg-white/15"
-                onClick={(e) => e.stopPropagation() || onQtyChange(product.id, -1)}
+onClick={(e) => { e.stopPropagation(); setLocalQty(Math.max(1, localQty - 1)); }}
               >
                 −
               </button>
-              <span className="text-[13px] text-white px-2.5 font-medium min-w-[28px] text-center">{qty}</span>
+<span className="text-[13px] text-white px-2.5 font-medium min-w-[28px] text-center">{localQty}</span>
               <button 
                 className="w-8 h-8 border-none bg-transparent text-white text-[18px] cursor-pointer flex items-center justify-center hover:bg-white/15"
-                onClick={(e) => e.stopPropagation() || onQtyChange(product.id, 1)}
+onClick={(e) => { e.stopPropagation(); setLocalQty(localQty + 1); }}
               >
                 +
               </button>
             </div>
             <button 
               className="flex-1 py-[15px] rounded-full border-none bg-clay text-white font-body text-[13px] tracking-[0.1em] uppercase cursor-pointer transition-all duration-300 hover:bg-[#b56a49] hover:-translate-y-0.5"
-              onClick={() => {
+onClick={() => {
+                if (localQty > 0) {
+                  // Add to cart
+                  for (let i = 0; i < localQty; i++) {
+                    increment(product.id);
+                  }
+                }
                 onClose();
               }}
             >
-              Add to Cart ({qty})
+Add to Cart ({localQty}x) — ${(localQty * product.price).toLocaleString()}
             </button>
           </div>
         </div>
@@ -728,12 +736,12 @@ export default function ProductListing() {
       />
 
       {/* Quick View Modal */}
-      <QuickViewModal 
+<QuickViewModal 
         product={quickViewProduct} 
         isOpen={!!quickViewProduct} 
         onClose={() => setQuickViewProduct(null)}
-        onQtyChange={handleQtyChange}
         cartCounts={cartCounts}
+        increment={increment}
       />
 
       {/* Mobile Filter Sheet */}
