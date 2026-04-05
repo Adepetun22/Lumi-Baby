@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CartProvider } from './contexts/CartContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -29,15 +30,17 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/products" element={<ProductListing />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <CartProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/products" element={<ProductListing />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </CartProvider>
   );
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useCart } from '../contexts/CartContext';
 
 interface NavbarProps {
   isScrolled: boolean;
@@ -116,6 +117,7 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
 
 // Mobile Menu Component
 function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { totalCount } = useCart();
   return (
     <div className={`fixed inset-0 z-[999] bg-warm-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-9 py-[90px] overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       
@@ -141,7 +143,7 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
       <MobileNavItem label="Gifts" onClose={onClose} />
       <div className="mt-8 flex gap-4">
         <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">My Account</a>
-        <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">Cart (0)</a>
+        <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">Cart ({totalCount})</a>
       </div>
     </div>
   );
@@ -149,6 +151,7 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
 
 // Main Navbar Component
 export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setMobileMenuOpen }: NavbarProps) {
+  const { totalCount } = useCart();
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 60);
@@ -212,7 +215,7 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
             <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
-            <span className="cart-badge">3</span>
+<span className="cart-badge">{totalCount}</span>
           </button>
 
           {/* Hamburger */}
