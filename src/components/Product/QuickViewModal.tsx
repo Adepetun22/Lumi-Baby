@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useCart } from '../../contexts/CartContext';
 
 interface Product {
   id: number;
@@ -23,7 +22,6 @@ interface QuickViewModalProps {
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
-  cartCounts: Record<number, number>;
   increment: (id: number) => void;
 }
 
@@ -31,11 +29,13 @@ export default function QuickViewModal({
   product, 
   isOpen, 
   onClose,
-  cartCounts,
   increment
 }: QuickViewModalProps) {
-  const [selectedVariant, setSelectedVariant] = useState(0);
   const [localQty, setLocalQty] = useState(1);
+
+  useEffect(() => {
+    setLocalQty(1);
+  }, [product]);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +45,7 @@ export default function QuickViewModal({
     }
     return () => {
       document.body.style.overflow = '';
-    }
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -74,25 +74,24 @@ export default function QuickViewModal({
     return gradients[bg] || 'from-[#FDE8E0] to-[#F2C4B2]';
   };
 
-  const bgGradient = getBgGradient(product.bg);
   const totalPrice = localQty * product.price;
   const totalOldPrice = localQty * (product.oldPrice || 0);
   const savings = totalOldPrice > 0 ? Math.round((1 - totalPrice / totalOldPrice) * 100) : 0;
 
   return (
     <div 
-      className={`fixed inset-0 z-[1000] bg-charcoal/55 backdrop-blur-[8px] flex items-center justify-center transition-opacity duration-35 \${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 z-1000 bg-charcoal/55 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       onClick={onClose}
     >
       <div 
-        className="bg-warm-white rounded-[24px] max-w-[820px] w-full max-h-[90vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2 shadow-[0_32px_80px_rgba(44,44,44,0.25)] transition-transform duration-40 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="bg-warm-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2 shadow-2xl transition-all duration-300"
         onClick={(e) => e.stopPropagation()}
-        style={{ transform: isOpen ? 'scale(1) translateY(0)' : 'scale(0.94) translateY(20px)' }}
+        style={{ transform: isOpen ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(20px)' }}
       >
         {/* Image Side */}
-        <div className={`relative rounded-[24px_0_0_24px] overflow-hidden min-h-[380px] flex items-center justify-center bg-gradient-to-br \${bgGradient}`}>
+        <div className={`relative rounded-l-3xl overflow-hidden min-h-96 flex items-center justify-center bg-gradient-to-br ${getBgGradient(product.bg)}`}>
           <button 
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/85 border-none cursor-pointer text-[16px] flex items-center justify-center hover:bg-white transition-colors z-[2]"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 border-none cursor-pointer text-lg flex items-center justify-center hover:bg-white transition-all z-10"
             onClick={onClose}
           >
             ✕
@@ -102,37 +101,36 @@ export default function QuickViewModal({
 
         {/* Content Side */}
         <div className="p-9 pb-8 flex flex-col">
-          <div className="text-[11px] tracking-[0.2em] uppercase text-clay font-medium mb-2">{product.cat}</div>
-          <h2 className="font-display text-[30px] font-normal leading-tight mb-2">{product.name}</h2>
-          <div className="flex items-center gap-1.5 mb-4 text-[13px] text-muted">
-            <span className="text-gold">{'★'.repeat(Math.floor(product.rating)) + '☆'.repeat(5 - Math.floor(product.rating))}</span>
+          <div className="text-xs uppercase tracking-widest text-clay font-medium mb-2">{product.cat}</div>
+          <h2 className="font-display text-4xl font-normal leading-tight mb-2">{product.name}</h2>
+          <div className="flex items-center gap-1.5 mb-4 text-sm text-muted">
+            <span className="text-gold">{'★'.repeat(Math.floor(product.rating))}{'☆'.repeat(5 - Math.floor(product.rating))}</span>
             <span>{product.rating} ({product.reviews.toLocaleString()} reviews)</span>
           </div>
 
-          <div className="flex gap-4 mb-5.5">
-            <div className="flex items-center gap-1.5 text-[12px] text-muted">
+          <div className="flex gap-4 mb-6">
+            <div className="flex items-center gap-1.5 text-xs text-muted">
               <span>🌱</span> Organic
             </div>
-            <div className="flex items-center gap-1.5 text-[12px] text-muted">
+            <div className="flex items-center gap-1.5 text-xs text-muted">
               <span>🛡️</span> BPA-free
             </div>
-            <div className="flex items-center gap-1.5 text-[12px] text-muted">
+            <div className="flex items-center gap-1.5 text-xs text-muted">
               <span>✈️</span> Free shipping
             </div>
           </div>
 
-          <p className="text-[14px] text-muted leading-relaxed mb-6">
+          <p className="text-sm text-muted leading-relaxed mb-6">
             {product.desc} Meets or exceeds all ASTM and CPSC safety standards.
           </p>
 
-          <div className="mb-5.5">
-            <h4 className="text-[12px] tracking-[0.12em] uppercase text-charcoal mb-2.5 font-medium">Size / Variant</h4>
+          <div className="mb-6">
+            <h4 className="text-xs uppercase tracking-widest text-charcoal mb-3 font-medium">Size / Variant</h4>
             <div className="flex flex-wrap gap-2">
-              {product.variants.map((variant, i) => (
+              {product.variants.map((variant) => (
                 <div
                   key={variant}
-                  className={`variant-pill px-4 py-1.75 rounded-[20px] border border-clay/14 text-[13px] cursor-pointer transition-all hover:border-clay hover:text-clay \${selectedVariant === i ? 'bg-clay border-clay text-white' : 'text-muted'}`}
-                  onClick={() => setSelectedVariant(i)}
+                  className="px-4 py-1.5 rounded-3xl border border-clay/20 text-xs cursor-pointer transition-all hover:border-clay hover:text-clay text-muted"
                 >
                   {variant}
                 </div>
@@ -141,33 +139,33 @@ export default function QuickViewModal({
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-[28px] font-medium text-charcoal">\${(localQty * product.price).toLocaleString()}.00</span>
+            <span className="text-3xl font-medium text-charcoal">${totalPrice.toLocaleString()}.00</span>
             {product.oldPrice && (
               <>
-                <span className="text-[16px] text-muted line-through">\${(localQty * (product.oldPrice || 0)).toLocaleString()}</span>
-                <span className="px-2.5 py-1 bg-clay-light text-clay rounded-[6px] text-[12px] font-semibold">Save {savings}%</span>
+                <span className="text-base text-muted line-through">${totalOldPrice.toLocaleString()}</span>
+                <span className="px-2 py-1 bg-clay/20 text-clay rounded-md text-xs font-semibold">Save {savings}%</span>
               </>
             )}
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex items-center gap-0 bg-clay rounded-full overflow-hidden">
+            <div className="flex items-center bg-clay rounded-full overflow-hidden">
               <button 
-                className="w-8 h-8 border-none bg-transparent text-white text-[18px] cursor-pointer flex items-center justify-center hover:bg-white/15"
+                className="w-8 h-8 border-none bg-transparent text-white text-lg cursor-pointer flex items-center justify-center hover:bg-white/20 transition-colors"
                 onClick={(e) => { e.stopPropagation(); setLocalQty(Math.max(1, localQty - 1)); }}
               >
                 −
               </button>
-              <span className="text-[13px] text-white px-2.5 font-medium min-w-[28px] text-center">{localQty}</span>
+              <span className="text-xs text-white px-3 font-medium min-w-7 text-center">{localQty}</span>
               <button 
-                className="w-8 h-8 border-none bg-transparent text-white text-[18px] cursor-pointer flex items-center justify-center hover:bg-white/15"
+                className="w-8 h-8 border-none bg-transparent text-white text-lg cursor-pointer flex items-center justify-center hover:bg-white/20 transition-colors"
                 onClick={(e) => { e.stopPropagation(); setLocalQty(localQty + 1); }}
               >
                 +
               </button>
             </div>
             <button 
-              className="flex-1 py-[15px] rounded-full border-none bg-clay text-white font-body text-[13px] tracking-[0.1em] uppercase cursor-pointer transition-all duration-300 hover:bg-[#b56a49] hover:-translate-y-0.5"
+              className="flex-1 py-4 rounded-3xl border-none bg-clay text-white font-medium text-sm tracking-tight uppercase cursor-pointer transition-all hover:bg-clay-dark hover:shadow-lg hover:-translate-y-0.5"
               onClick={() => {
                 if (localQty > 0) {
                   for (let i = 0; i < localQty; i++) {
@@ -177,7 +175,7 @@ export default function QuickViewModal({
                 onClose();
               }}
             >
-              Add to Cart ({localQty}x) — \${(localQty * product.price).toLocaleString()}
+              Add to Cart ({localQty}x) — ${totalPrice.toLocaleString()}
             </button>
           </div>
         </div>
