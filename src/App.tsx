@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import Homepage from './pages/homepage';
 import ProductListing from './pages/productlisting';
 import ProductDetails from './pages/productdetails';
+import Cart from './pages/cart';
+
 
 // Layout component that wraps all pages with Navbar and Footer
 function Layout({ children }: { children: React.ReactNode }) {
@@ -36,7 +38,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/products" element={<ProductListing />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </Layout>
       </Router>
