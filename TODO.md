@@ -1,7 +1,1 @@
-# Fix Cart.tsx Syntax Error
-
-## Steps:
-- [x] 1. Fix duplicate malformed grid div in src/pages/cart.tsx (remove first incomplete block with comment).
-- [x] 2. Verify JSX parses correctly, restart Vite dev server.
-- [x] 3. Test cart page renders at http://localhost:5177/cart.
-- [x] 4. Complete task.
+# Task: Create CartItem.tsx component and refactor cart.tsx&#10;&#10;## Steps:&#10;- [ ] 1. Create src/components/Product/CartItem.tsx with extracted JSX from cart items&#10;- [ ] 2. Edit src/pages/cart.tsx: import CartItem and replace inline JSX with <CartItem />&#10;- [ ] 3. Update TODO.md to mark completion&#10;- [ ] 4. Test at http://localhost:5177/cart&#10;- [ ] 5. Complete task
