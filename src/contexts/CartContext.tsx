@@ -51,6 +51,7 @@ const STORAGE_KEY = 'lumi-baby-cart';
 interface CartContextType {
   cartCounts: Record<number, number>;
   totalCount: number;
+  uniqueCount: number;
   increment: (id: number) => void;
   decrement: (id: number) => void;
   setQty: (id: number, qty: number) => void;
@@ -90,9 +91,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const setQty = (id: number, qty: number) => dispatch({ type: 'SET', id, qty });
 
   const totalCount = Object.values(state.cartCounts).reduce((sum, qty) => sum + qty, 0);
+  const uniqueCount = Object.keys(state.cartCounts).length;
 
   return (
-    <CartContext.Provider value={{ cartCounts: state.cartCounts, totalCount, increment, decrement, setQty }}>
+    <CartContext.Provider value={{ cartCounts: state.cartCounts, totalCount, uniqueCount, increment, decrement, setQty }}>
       {children}
     </CartContext.Provider>
   );
