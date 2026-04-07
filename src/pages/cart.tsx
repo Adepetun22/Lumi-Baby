@@ -297,11 +297,10 @@ const Cart: React.FC = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-7 px-12 pb-20 pt-9 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-7 px-6 lg:px-12 pb-20 pt-9 max-w-6xl mx-auto">
           
           {/* Cart Items Column */}
-
-          <div>
+          <div className="order-2 lg:order-1">
             <div className="flex items-center justify-between mb-5">
               <div className="font-display text-3xl font-normal">Cart <span className="text-clay italic">Items</span></div>
               <button className="text-xs text-muted underline hover:text-red transition-colors font-body" onClick={clearCart}>
@@ -335,8 +334,8 @@ const Cart: React.FC = () => {
               </div>
             )}
 
-            {/* Upsell */}
-            <div className="mt-8 pt-8 border-t border-clay/10">
+            {/* Upsell — hidden on mobile, shown below order summary via order */}
+            <div className="hidden lg:block mt-8 pt-8 border-t border-clay/10">
               <h3 className="font-display text-2xl font-normal mb-3.5 text-charcoal">You might also <em className="italic text-clay">love</em></h3>
               <div className="flex gap-3.5 overflow-x-auto pb-2 -mb-2 scrollbar-thin scrollbar-thumb-clay/30 scrollbar-track-transparent snap-x snap-mandatory">
                 {UPSELL_PRODUCTS.map((product) => (
@@ -365,7 +364,7 @@ const Cart: React.FC = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:sticky lg:top-[92px]">
+          <div className="order-1 lg:order-2 lg:sticky lg:top-[92px] self-start">
             <div className="bg-warm-white rounded-2xl border border-clay/10 overflow-hidden">
               {/* Header */}
               <div className="p-6 pb-5 border-b border-clay/10">
@@ -487,6 +486,28 @@ const Cart: React.FC = () => {
                   <span className="px-3 py-1.5 bg-cream border border-clay/20 rounded-md text-xs font-medium text-muted tracking-tight">PayPal</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Upsell — mobile only, appears below Order Summary */}
+          <div className="order-3 lg:hidden pt-2 border-t border-clay/10">
+            <h3 className="font-display text-2xl font-normal mb-3.5 text-charcoal">You might also <em className="italic text-clay">love</em></h3>
+            <div className="flex gap-3.5 overflow-x-auto pb-2 -mb-2 scrollbar-thin scrollbar-thumb-clay/30 scrollbar-track-transparent snap-x snap-mandatory">
+              {UPSELL_PRODUCTS.map((product) => (
+                <div key={product.id} className="flex-shrink-0 w-[160px] bg-warm-white rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1.5 transition-all duration-300 snap-center">
+                  <div className={`h-24 flex items-center justify-center text-4xl bg-gradient-to-br ${product.bg}`} />
+                  <div className="p-3 pb-4">
+                    <h4 className="font-display text-base font-normal text-charcoal leading-tight mb-1.5">{product.name}</h4>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-clay">${product.price}</span>
+                      <button
+                        className="w-7 h-7 rounded-full border-none bg-clay text-white text-lg flex items-center justify-center hover:bg-clay-dark transition-all"
+                        onClick={(e) => { e.stopPropagation(); increment(product.id); showToast(`${product.name} added!`, '🛍️'); }}
+                      >+</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
