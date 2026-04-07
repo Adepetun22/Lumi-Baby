@@ -310,7 +310,7 @@ const Cart: React.FC = () => {
             </div>
 
             {/* Desktop Header */}
-            <div className="grid grid-cols-[80px_1.8fr_1fr_1fr_1fr_40px] gap-3 pb-3 mb-6 border-b border-clay/10 hidden lg:grid text-xs tracking-[0.18em] uppercase text-muted font-medium">
+            <div className="hidden md:grid grid-cols-[80px_1.8fr_1fr_1fr_1fr_40px] gap-3 pb-3 mb-6 border-b border-clay/10 text-xs tracking-[0.18em] uppercase text-muted font-medium">
               <div />
               <div>Product</div>
               <div className="text-center">Price</div>
@@ -375,7 +375,7 @@ const Cart: React.FC = () => {
               {/* Promo */}
               <div className="p-5 pb-4 border-b border-clay/10">
                 <div className="text-xs tracking-[0.15em] uppercase text-charcoal font-medium mb-2.5">Promo Code</div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <input 
                     type="text" 
                     className="flex-1 px-4 py-2.5 rounded-full border-2 border-clay/20 bg-cream font-body text-sm placeholder:text-muted focus:border-clay focus:outline-none transition-all"
