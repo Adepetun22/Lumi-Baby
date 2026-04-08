@@ -152,3 +152,8 @@ body {
   animation: fadeIn 2s 1s both;
 }
 
+/* Cart page buttons - ensure pointer cursor on all buttons */
+.cart-page button { 
+  cursor: pointer; 
+}
+

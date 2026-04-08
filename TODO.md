@@ -1,16 +1,11 @@
-# Cart Mobile Layout Reorder - Progress
+# Cart Button Cursor Pointer Updates
 
-Previous: Desktop duplication fixed ✅
+## Steps:
+- [x] 1. Create TODO.md ✓
+- [x] 2. Edit src/pages/cart.tsx - add 'cart-page' class to root div ✓
+- [x] 3. Edit src/index.css - add .cart-page button CSS rule ✓
+- [x] 4. Test on http://localhost:5173/cart (changes applied, hover buttons for pointer cursor)
+- [x] 5. Mark complete ✓
 
-New Task: Mobile (<lg): Cart Items ABOVE Order Summary
-
-## Steps
-- [ ] 1. Update TODO.md
-- [ ] 2. Edit cart.tsx: Swap order classes
-  - Items: `order-1 lg:order-2`
-  - Summary: `order-2 lg:order-1`
-- [ ] 3. Test mobile stack: Items → Summary → Upsell
-- [ ] 4. Complete
-
-**Next:** Implement cart.tsx reorder
+**Done! All cart buttons now have cursor: pointer.**
 

@@ -127,7 +127,7 @@ const Cart: React.FC = () => {
   }, [totalCount]);
 
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="cart-page min-h-screen bg-cream pt-[72px]">
       {toast && <Toast msg={toast.msg} icon={toast.icon} />}
 
       {/* Hero */}
