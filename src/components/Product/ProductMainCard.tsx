@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCart } from '../../contexts/CartContext';
 
 interface Product {
   id: number;
@@ -54,6 +55,16 @@ export default function ProductMainCard({
   onQuickView 
 }: ProductMainCardProps) {
   const [isWished, setIsWished] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+  const { increment, cartCounts } = useCart();
+  const qty = cartCounts[product.id] || 0;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    increment(product.id);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 1500);
+  };
 
   const bgGradient = getBgGradient(product.bg);
 
@@ -114,6 +125,13 @@ export default function ProductMainCard({
                 <span className="text-[13px] text-muted line-through">${product.oldPrice}</span>
               )}
             </div>
+            <button
+              className="w-9 h-9 rounded-full border-none cursor-pointer text-white text-lg font-light flex items-center justify-center transition-all duration-300 hover:scale-110"
+              style={{ backgroundColor: isAdded ? '#5C7A57' : '#C97B5A' }}
+              onClick={handleAddToCart}
+            >
+              {isAdded ? '✓' : qty > 0 ? qty : '+'}
+            </button>
           </div>
       </div>
     </div>

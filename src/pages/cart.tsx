@@ -2,19 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { Link } from 'react-router-dom';
 import CartItem from '../components/Product/CartItem';
+import { ALL_PRODUCTS, getBgGradient } from '../data/products';
 
 // ==================== INTERFACES ====================
-interface Product {
-  id: number;
-  emoji: string;
-  bg: string;
-  brand: string;
-  name: string;
-  variant: string;
-  price: number;
-  oldPrice?: number;
-}
-
 interface PromoCode {
   code: string;
   type: 'percent' | 'freeship';
@@ -29,14 +19,7 @@ interface ShippingOption {
   price: number;
 }
 
-// ==================== MOCK DATA (from cart.html + project patterns) ====================
-const PRODUCTS: Product[] = [
-  { id: 1, emoji: '🌙', bg: 'from-[#EDE8F8] to-[#D4C8E8]', brand: 'Dreamland', name: 'Luna Sound Machine', variant: 'Lavender Dream · Standard', price: 54, oldPrice: 68 },
-  { id: 2, emoji: '🍼', bg: 'from-[#FDE8E0] to-[#F2C4B2]', brand: 'Lumi Originals', name: 'Bloom Glass Bottle', variant: '8oz · 2-Pack', price: 28 },
-  { id: 3, emoji: '🌿', bg: 'from-[#E0EDD8] to-[#C5DFC0]', brand: 'NatureBorn', name: 'Cloud Organic Swaddle', variant: 'S/M · Sage', price: 42 },
-  { id: 19, emoji: '🦋', bg: 'from-[#EDE8F8] to-[#D4C8E8]', brand: 'SoftCloud', name: 'Arch Activity Gym', variant: 'Rainbow', price: 78, oldPrice: 95 },
-  { id: 20, emoji: '📖', bg: 'from-[#FFF3D4] to-[#FFE4A0]', brand: 'Lumi Originals', name: 'Memory Book — Year 1', variant: 'Blush', price: 46 },
-];
+
 
 const PROMO_CODES: Record<string, PromoCode> = {
   'LUMI20': { code: 'LUMI20', type: 'percent', value: 20, label: 'LUMI20 — 20% off' },
@@ -50,11 +33,7 @@ const SHIPPING_OPTIONS: ShippingOption[] = [
   { id: 'overnight', label: 'Overnight', sub: 'Next business day', price: 24.99 },
 ];
 
-const UPSELL_PRODUCTS: Product[] = [
-  { id: 99, emoji: '🌿', bg: 'from-[#E0EDD8] to-[#C5DFC0]', brand: 'NatureBorn', name: 'Bamboo Wipes Refill', variant: 'One size', price: 14 },
-  { id: 98, emoji: '🌸', bg: 'from-[#FDE8E0] to-[#F2C4B2]', brand: 'Lumi Originals', name: 'Petal Rattle Set', variant: 'One size', price: 22 },
-  { id: 97, emoji: '⭐', bg: 'from-[#FFF3D4] to-[#FFE4A0]', brand: 'Dreamland', name: 'Star Projector', variant: 'One size', price: 72 },
-];
+const UPSELL_PRODUCTS = ALL_PRODUCTS.filter(p => [6, 8, 17].includes(p.id));
 
 const TAX_RATE = 0.08;
 const FREE_SHIP_THRESHOLD = 80;
@@ -84,8 +63,9 @@ const MiniCartDrawer: React.FC<{
   onClose: () => void;
   cartCounts: Record<number, number>;
 }> = ({ isOpen, onClose, cartCounts }) => {
-  const cartItems = PRODUCTS.filter(p => cartCounts[p.id] > 0).map(p => ({
+  const cartItems = ALL_PRODUCTS.filter(p => cartCounts[p.id] > 0).map(p => ({
     ...p,
+    bg: getBgGradient(p.bg),
     qty: cartCounts[p.id] || 0,
   }));
 
@@ -167,8 +147,9 @@ const Cart: React.FC = () => {
   const [miniCartOpen, setMiniCartOpen] = useState(false);
 
   // Computed cart items (only items with qty > 0)
-  const cartItems = PRODUCTS.filter(p => cartCounts[p.id] > 0).map(p => ({
+  const cartItems = ALL_PRODUCTS.filter(p => cartCounts[p.id] > 0).map(p => ({
     ...p,
+    bg: getBgGradient(p.bg),
     qty: cartCounts[p.id] || 0,
   }));
 
@@ -340,7 +321,7 @@ const Cart: React.FC = () => {
               <div className="flex gap-3.5 overflow-x-auto pb-2 -mb-2 scrollbar-thin scrollbar-thumb-clay/30 scrollbar-track-transparent snap-x snap-mandatory">
                 {UPSELL_PRODUCTS.map((product) => (
                   <div key={product.id} className="flex-shrink-0 w-[160px] bg-warm-white rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1.5 transition-all duration-300 snap-center">
-                    <div className={`h-24 flex items-center justify-center text-4xl bg-gradient-to-br ${product.bg}`} />
+                    <div className={`h-24 flex items-center justify-center text-4xl bg-gradient-to-br ${getBgGradient(product.bg)}`}>{product.emoji}</div>
                     <div className="p-3 pb-4">
                       <h4 className="font-display text-base font-normal text-charcoal leading-tight mb-1.5">{product.name}</h4>
                       <div className="flex items-center justify-between">
@@ -495,7 +476,7 @@ const Cart: React.FC = () => {
             <div className="flex gap-3.5 overflow-x-auto pb-2 -mb-2 scrollbar-thin scrollbar-thumb-clay/30 scrollbar-track-transparent snap-x snap-mandatory">
               {UPSELL_PRODUCTS.map((product) => (
                 <div key={product.id} className="flex-shrink-0 w-[160px] bg-warm-white rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1.5 transition-all duration-300 snap-center">
-                  <div className={`h-24 flex items-center justify-center text-4xl bg-gradient-to-br ${product.bg}`} />
+                  <div className={`h-24 flex items-center justify-center text-4xl bg-gradient-to-br ${getBgGradient(product.bg)}`}>{product.emoji}</div>
                   <div className="p-3 pb-4">
                     <h4 className="font-display text-base font-normal text-charcoal leading-tight mb-1.5">{product.name}</h4>
                     <div className="flex items-center justify-between">
