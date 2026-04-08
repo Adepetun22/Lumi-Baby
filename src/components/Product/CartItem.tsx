@@ -36,28 +36,27 @@ const CartItem: React.FC<CartItemProps> = ({ item, updateQty }) => {
       {/* Unit Price - hidden on mobile, shown center on desktop */}
       <div className="hidden md:block text-base font-medium text-center">${item.price.toFixed(2)}</div>
 
-      {/* Quantity Controls */}
-      <div className="flex justify-start md:justify-center">
-        <div className="flex items-center border-2 border-clay/20 rounded-full overflow-hidden bg-warm-white h-8 md:h-9 w-max">
-          <button
-            className="w-8 md:w-9 h-full border-none bg-transparent text-lg flex items-center justify-center text-charcoal hover:bg-clay/10 transition-colors"
-            onClick={() => updateQty(item.id, Math.max(0, item.qty - 1))}
-          >
-            −
-          </button>
-          <span className="px-3 md:px-4 text-sm font-medium min-w-[2rem] md:min-w-[2.25rem] text-center">{item.qty}</span>
-          <button
-            className="w-8 md:w-9 h-full border-none bg-transparent text-lg flex items-center justify-center text-charcoal hover:bg-clay/10 transition-colors"
-            onClick={() => updateQty(item.id, item.qty + 1)}
-          >
-            +
-          </button>
+      {/* Quantity + Subtotal row (mobile: side by side | desktop: separate columns) */}
+      <div className="flex items-center justify-between md:contents">
+        {/* Quantity Controls */}
+        <div className="flex justify-start md:justify-center">
+          <div className="flex items-center border-2 border-clay/20 rounded-full overflow-hidden bg-warm-white h-8 md:h-9 w-max">
+            <button
+              className="w-8 md:w-9 h-full border-none bg-transparent text-lg flex items-center justify-center text-charcoal hover:bg-clay/10 transition-colors"
+              onClick={() => updateQty(item.id, Math.max(0, item.qty - 1))}
+            >−</button>
+            <span className="px-3 md:px-4 text-sm font-medium min-w-[2rem] md:min-w-[2.25rem] text-center">{item.qty}</span>
+            <button
+              className="w-8 md:w-9 h-full border-none bg-transparent text-lg flex items-center justify-center text-charcoal hover:bg-clay/10 transition-colors"
+              onClick={() => updateQty(item.id, item.qty + 1)}
+            >+</button>
+          </div>
         </div>
-      </div>
 
-      {/* Subtotal */}
-      <div className="text-xl md:text-2xl font-display font-light text-charcoal text-right md:text-center">
-        ${(item.price * item.qty).toFixed(2)}
+        {/* Subtotal */}
+        <div className="text-xl md:text-2xl font-display font-light text-charcoal text-right md:text-center">
+          ${(item.price * item.qty).toFixed(2)}
+        </div>
       </div>
 
       {/* Remove Button */}
