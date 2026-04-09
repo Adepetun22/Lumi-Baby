@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState, ReactNode } from 'react';
 
 interface CartState {
   cartCounts: Record<number, number>;
@@ -52,6 +52,7 @@ interface CartContextType {
   cartCounts: Record<number, number>;
   totalCount: number;
   uniqueCount: number;
+  hydrated: boolean;
   increment: (id: number) => void;
   decrement: (id: number) => void;
   setQty: (id: number, qty: number) => void;
@@ -65,6 +66,7 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { cartCounts: {} });
+  const [hydrated, setHydrated] = useState(false);
 
   // Persist to localStorage
   useEffect(() => {
@@ -72,7 +74,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        dispatch({ type: 'SET' as const, id: 0, qty: 0 }); // Reset first
         Object.entries(parsed.cartCounts).forEach(([idStr, qty]: [string, number]) => {
           dispatch({ type: 'SET' as const, id: Number(idStr), qty });
         });
@@ -80,6 +81,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         console.error('Failed to load cart from localStorage');
       }
     }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const uniqueCount = Object.keys(state.cartCounts).length;
 
   return (
-    <CartContext.Provider value={{ cartCounts: state.cartCounts, totalCount, uniqueCount, increment, decrement, setQty }}>
+    <CartContext.Provider value={{ cartCounts: state.cartCounts, totalCount, uniqueCount, hydrated, increment, decrement, setQty }}>
       {children}
     </CartContext.Provider>
   );

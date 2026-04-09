@@ -39,7 +39,7 @@ interface FormData {
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const { cartCounts } = useCart();
+  const { cartCounts, hydrated } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -74,12 +74,12 @@ const Checkout: React.FC = () => {
   const tax = (subtotal + formData.shippingPrice) * TAX_RATE;
   const total = subtotal + formData.shippingPrice + tax;
 
-  // Guard: Redirect if empty cart
+  // Guard: Redirect if empty cart — only after localStorage has been read
   useEffect(() => {
-    if (totalItems === 0) {
+    if (hydrated && totalItems === 0) {
       navigate('/cart');
     }
-  }, [totalItems, navigate]);
+  }, [hydrated, totalItems, navigate]);
 
   // Generate order num on mount
   useEffect(() => {

@@ -129,6 +129,16 @@ const Cart: React.FC = () => {
     if (totalCount === 0) setActivePromo(null);
   }, [totalCount]);
 
+  const handleProceedToCheckout = () => {
+    if (cartItems.length === 0) {
+      showToast('Your cart is empty. Please add items before proceeding.', '❌');
+      return;
+    }
+
+    // Add navigation logic here
+    window.location.href = '/checkout'; // Example navigation logic
+  };
+
   return (
     <div className="cart-page min-h-screen bg-cream pt-[72px]">
       {toast && <Toast msg={toast.msg} icon={toast.icon} />}
@@ -333,10 +343,13 @@ const Cart: React.FC = () => {
                   <span className="font-display text-[2rem] font-light text-clay">${total.toFixed(2)}</span>
                 </div>
                 <div className="text-xs text-muted mb-4">Including estimated tax. Final amount confirmed at checkout.</div>
-                <button className="w-full py-4 rounded-full border-none bg-clay text-white font-body text-xs tracking-[0.15em] uppercase font-medium flex items-center justify-center gap-2.5 hover:bg-clay-dark transition-all mb-3">
+                <button
+                  className="w-full py-4 rounded-full border-none bg-clay text-white font-body text-xs tracking-[0.15em] uppercase font-medium flex items-center justify-center gap-2.5 hover:bg-clay-dark transition-all mb-3"
+                  onClick={handleProceedToCheckout}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 12l2 2 4-4m-7 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6" />
-                    <path d="M12 7V3a2 2 0 0 0-4 0v4a2 2 0 0 0 4 0z" />
+                    <path d="M9 12l2 2 4-4m-7 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6"></path>
+                    <path d="M12 7V3a2 2 0 0 0-4 0v4a2 2 0 0 0 4 0z"></path>
                   </svg>
                   Proceed to Checkout
                 </button>
