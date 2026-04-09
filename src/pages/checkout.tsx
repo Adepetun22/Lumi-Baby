@@ -402,7 +402,7 @@ const Checkout: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-cream pt-[72px]">
       {/* Custom Cursor */}
       <div className="cursor fixed w-[9px] h-[9px] bg-clay rounded-full pointer-events-none z-[9999] mix-blend-multiply transition-all" id="cursor" />
       <div className="cursor-ring fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-[9998] opacity-40 transition-opacity" id="cursorRing" />
@@ -421,11 +421,10 @@ const Checkout: React.FC = () => {
         </div>
       )}
 
-      {/* Stepper (replacement for steps-bar) */}
+      {/* Stepper */}
       <Stepper steps={['Information', 'Shipping', 'Payment', 'Review']} currentStep={currentStep - 1} />
 
-      <div className="pt-[calc(var(--nav-h)_+14rem)]">
-        <div className="checkout-wrap grid grid-cols-1 lg:grid-cols-[1fr,380px] gap-8 max-w-7xl mx-auto p-10 lg:p-14 pb-20 lg:pb-32 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 max-w-6xl mx-auto px-6 lg:px-12 py-10 pb-20 items-start">
           
           {/* Form Panel */}
           <div className="form-panel min-w-0 lg:order-2">
@@ -433,7 +432,7 @@ const Checkout: React.FC = () => {
           </div>
 
           {/* Order Sidebar */}
-          <div className="order-sidebar lg:sticky lg:top-[calc(theme(var(--nav-h))+56px+5rem)] lg:order-1">
+          <div className="lg:sticky lg:top-[92px] self-start">
             <div className="sidebar-card bg-warm-white rounded-3xl border border-border overflow-hidden">
               <div className="p-5 border-b border-border">
                 <h2 className="font-display text-2xl font-normal text-charcoal">Your <em className="text-clay">Order</em></h2>
@@ -479,9 +478,8 @@ const Checkout: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 
