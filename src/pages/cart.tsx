@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { Link } from 'react-router-dom';
 import CartItem from '../components/Product/CartItem';
+import Stepper from '../components/Stepper';
 import { ALL_PRODUCTS, getBgGradient } from '../data/products';
 
 // ==================== INTERFACES ====================
@@ -82,6 +83,8 @@ const Cart: React.FC = () => {
     ...p,
     bg: getBgGradient(p.bg),
     qty: cartCounts[p.id] || 0,
+    brand: p.cat,
+    variant: p.variant || 'Default Variant',
   }));
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -160,25 +163,7 @@ const Cart: React.FC = () => {
         </div>
       </section>
 
-      {/* Progress Strip */}
-      <div className="bg-charcoal/90 py-4 px-12 border-b border-white/5">
-        <div className="flex items-center max-w-[420px] mx-auto">
-          <div className="flex items-center gap-2 text-xs font-medium tracking-[0.15em] uppercase text-cream">
-            <div className="w-6 h-6 rounded-full border border-cream bg-clay text-white flex items-center justify-center text-xs font-bold">1</div>
-            <span>Cart</span>
-          </div>
-          <div className="flex-1 h-px bg-white/20 mx-3" />
-          <div className="flex items-center gap-2 text-xs font-medium tracking-[0.15em] uppercase text-cream/35">
-            <div className="w-6 h-6 rounded-full border-2 border-cream/35 flex items-center justify-center text-xs font-bold">2</div>
-            <span>Shipping</span>
-          </div>
-          <div className="flex-1 h-px bg-white/20 mx-3" />
-          <div className="flex items-center gap-2 text-xs font-medium tracking-[0.15em] uppercase text-cream/35">
-            <div className="w-6 h-6 rounded-full border-2 border-cream/35 flex items-center justify-center text-xs font-bold">3</div>
-            <span>Payment</span>
-          </div>
-        </div>
-      </div>
+      <Stepper steps={['Cart', 'Shipping', 'Payment']} currentStep={0} />
 
       {cartItems.length === 0 ? (
         <div className="text-center py-20 px-6 max-w-md mx-auto">

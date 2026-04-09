@@ -7,6 +7,7 @@ import Homepage from './pages/homepage';
 import ProductListing from './pages/productlisting';
 import ProductDetails from './pages/productdetails';
 import Cart from './pages/cart';
+import Checkout from './pages/checkout';
 
 
 // Layout component that wraps all pages with Navbar and Footer
@@ -39,6 +40,7 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/products" element={<ProductListing />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </Layout>
       </Router>
