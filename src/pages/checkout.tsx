@@ -397,8 +397,107 @@ const Checkout: React.FC = () => {
             </div>
           </div>
         );
-      // Case 3 and 4 abbreviated for response length - full implementation would include payment tabs, review summary, terms checkbox
+      case 3:
+        return (
+          <div className="space-y-7">
+            <div className="space-y-2">
+              <div className="text-xs font-medium uppercase tracking-[0.18em] text-clay flex items-center gap-2.5">
+                <div className="w-5 h-px bg-clay" />Step 3 of 4
+              </div>
+              <h1 className="font-display text-[clamp(28px,3vw,42px)] font-normal leading-tight text-charcoal">
+                Payment <em className="text-clay italic">Information</em>
+              </h1>
+            </div>
+            {/* Payment Methods */}
+            <div className="mb-5">
+              <div className="text-xs uppercase tracking-[0.18em] text-charcoal font-medium mb-4 pb-2.5 border-b border-border">Payment Method</div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                {[
+                  { key: 'card', icon: '💳', label: 'Credit Card' },
+                  { key: 'paypal', icon: '💳', label: 'PayPal' },
+                  { key: 'apple', icon: '🍎', label: 'Apple Pay' },
+                  { key: 'other', icon: '💳', label: 'Other' }
+                ].map(method => (
+                  <button
+                    key={method.key}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${formData.payMethod === method.key ? 'border-clay bg-clay/5 shadow-lg ring-1 ring-clay/20' : 'border-border hover:border-clay hover:bg-blush/20'}`}
+                    onClick={() => updateFormData({ payMethod: method.key as 'card' | 'paypal' | 'apple' | 'other' })}
+                  >
+                    <span className="text-2xl">{method.icon}</span>
+                    <div className="text-xs font-medium text-charcoal">{method.label}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Card Details */}
+            {formData.payMethod === 'card' && (
+              <div className="space-y-3.5">
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="form-field">
+                    <label className="input-label">Cardholder Name <span className="text-clay">*</span></label>
+                    <input
+                      className={`input-standard ${errors.cardName ? 'border-red ring-1 ring-red/10' : ''}`}
+                      placeholder="Sarah Mitchell"
+                      value={formData.cardName || ''}
+                      onChange={(e) => updateFormData({ cardName: e.target.value })}
+                    />
+                    {errors.cardName && <div className="text-xs text-red mt-1">{errors.cardName}</div>}
+                  </div>
+                  <div className="form-field">
+                    <label className="input-label">Card Number <span className="text-clay">*</span></label>
+                    <input
+                      className={`input-standard ${errors.cardNum ? 'border-red ring-1 ring-red/10' : ''}`}
+                      placeholder="0000 0000 0000 0000"
+                      value={formData.cardNum || ''}
+                      onChange={(e) => updateFormData({ cardNum: e.target.value })}
+                    />
+                    {errors.cardNum && <div className="text-xs text-red mt-1">{errors.cardNum}</div>}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="input-label">Expiry Date <span className="text-clay">*</span></label>
+                    <input
+                      className={`input-standard ${errors.expiry ? 'border-red ring-1 ring-red/10' : ''}`}
+                      placeholder="MM/YY"
+                      value={formData.expiry || ''}
+                      onChange={(e) => updateFormData({ expiry: e.target.value })}
+                    />
+                    {errors.expiry && <div className="text-xs text-red mt-1">{errors.expiry}</div>}
+                  </div>
+                  <div>
+                    <label className="input-label">CVV <span className="text-clay">*</span></label>
+                    <input
+                      className={`input-standard ${errors.cvv ? 'border-red ring-1 ring-red/10' : ''}`}
+                      placeholder="123"
+                      maxLength={4}
+                      value={formData.cvv || ''}
+                      onChange={(e) => updateFormData({ cvv: e.target.value })}
+                    />
+                    {errors.cvv && <div className="text-xs text-red mt-1">{errors.cvv}</div>}
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="flex flex-col gap-3 pt-2">
+              <button 
+                className="w-full flex items-center justify-center gap-2.5 py-4 rounded-full border-none bg-clay text-white font-body text-xs uppercase tracking-[0.12em] font-medium hover:bg-clay-dark transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer" 
+                onClick={nextStep}
+              >
+                Continue to Review
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button className="flex items-center gap-1.5 text-xs uppercase tracking-[0.06em] text-muted hover:text-charcoal transition-colors self-start p-2 bg-transparent border-none cursor-pointer" onClick={prevStep}>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                Back to Shipping
+              </button>
+            </div>
+          </div>
+        );
       case 4:
+
         return (
           <div className="space-y-7">
             {/* Review content similar to step 2 */}
