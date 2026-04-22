@@ -173,7 +173,7 @@ const Cart: React.FC = () => {
         </div>
       </section>
 
-      <Stepper steps={['Cart', 'Shipping', 'Payment']} currentStep={0} />
+      <Stepper steps={['Information', 'Shipping', 'Payment']} currentStep={0} />
 
       {cartItems.length === 0 ? (
         <div className="text-center py-20 px-6 max-w-md mx-auto">
