@@ -390,8 +390,8 @@ const Checkout: React.FC = () => {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-              <button className="btn-back text-xs uppercase tracking-[0.06em] text-muted hover:text-charcoal transition-colors self-start p-2" onClick={prevStep}>
-                <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              <button className="flex items-center gap-1.5 text-xs uppercase tracking-[0.06em] text-muted hover:text-charcoal transition-colors self-start p-2 bg-transparent border-none cursor-pointer" onClick={prevStep}>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 Back to Information
               </button>
             </div>
