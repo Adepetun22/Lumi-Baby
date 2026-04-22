@@ -347,8 +347,11 @@ const Checkout: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col gap-3 pt-2">
-              <button className="btn-continue w-full" onClick={nextStep}>
-                Continue to Payment <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>
+              <button className="w-full flex items-center justify-center gap-2.5 py-4 rounded-full border-none bg-clay text-white font-body text-xs uppercase tracking-[0.12em] font-medium hover:bg-clay-dark transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5" onClick={nextStep}>
+                Continue to Payment
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </button>
               <button className="btn-back text-xs uppercase tracking-[0.06em] text-muted hover:text-charcoal transition-colors self-start p-2" onClick={prevStep}>
                 <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
