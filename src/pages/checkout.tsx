@@ -1,9 +1,45 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Stepper from '../components/Stepper';
 import { useCart } from '../contexts/CartContext';
 import { ALL_PRODUCTS, getBgGradient } from '../data/products';
 // import { CartContextType } from '../contexts/CartContext'; // Fixed: not exported
+
+function useCustomCursor() {
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const followerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    const follower = followerRef.current;
+    if (!cursor || !follower) return;
+
+    let mouseX = 0, mouseY = 0;
+    let followerX = 0, followerY = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    };
+
+    const animateFollower = () => {
+      followerX += (mouseX - followerX) * 0.12;
+      followerY += (mouseY - followerY) * 0.12;
+      follower.style.left = followerX + 'px';
+      follower.style.top = followerY + 'px';
+      requestAnimationFrame(animateFollower);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    animateFollower();
+
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return { cursorRef, followerRef };
+}
 
 const TAX_RATE = 0.08;
 
@@ -38,6 +74,7 @@ interface FormData {
 }
 
 const Checkout: React.FC = () => {
+  const { cursorRef, followerRef } = useCustomCursor();
   const navigate = useNavigate();
   const { cartCounts, hydrated } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
@@ -407,8 +444,8 @@ const Checkout: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream pt-[72px]">
       {/* Custom Cursor */}
-      <div className="cursor fixed w-[9px] h-[9px] bg-clay rounded-full pointer-events-none z-[9999] mix-blend-multiply transition-all" id="cursor" />
-      <div className="cursor-ring fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-[9998] opacity-40 transition-opacity" id="cursorRing" />
+      <div ref={cursorRef} className="cursor fixed w-[9px] h-[9px] bg-clay rounded-full pointer-events-none z-[9999] mix-blend-multiply transition-all" />
+      <div ref={followerRef} className="cursor-follower fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-[9998] opacity-40 transition-opacity" />
       
       {/* Toast */}
       <div className="toast fixed bottom-7 left-1/2 -translate-x-1/2 -translate-y-3 z-[9100] bg-charcoal text-white px-5.5 py-3 rounded-full text-sm flex items-center gap-2 shadow-2xl opacity-0 invisible transition-all pointer-events-none whitespace-nowrap" id="toast">
