@@ -169,9 +169,9 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-[1000] px-12 h-[72px] flex items-center justify-between transition-all duration-300 ${navBg} ${isScrolled ? 'scrolled' : ''}`}>
-        <a href="#" className={`font-display text-2xl font-light tracking-widest transition-colors duration-300 flex items-center gap-2 ${textColor}`}>
-          Lumi<span className={accentColor}>✦</span>Baby
-        </a>
+<Link to="/" className={`font-display text-2xl font-light tracking-widest transition-colors duration-300 flex items-center gap-2 ${textColor}`}>
+  Lumi<span className={accentColor}>✦</span>Baby
+</Link>
 
         {/* Desktop Navigation */}
         <div className="nav-center">

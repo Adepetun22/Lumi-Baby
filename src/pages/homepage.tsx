@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // ==================== CUSTOM HOOKS ====================
 
@@ -73,6 +74,7 @@ function useScrollReveal() {
 
 // Hero Section
 function Hero() {
+  const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -154,7 +156,7 @@ function Hero() {
           Premium baby essentials crafted with love, designed for life's most magical moments.
         </p>
         <div className="flex gap-4 justify-center flex-wrap animate-hero-reveal" style={{ animationDelay: '0.4s' }}>
-          <button className="px-11 py-4 bg-clay text-white border-none rounded-full font-body text-xs tracking-widest uppercase cursor-pointer transition-all duration-300 font-medium hover:bg-[#b56a49] hover:-translate-y-0.5 hover:shadow-clay/40">Shop Now</button>
+          <button onClick={() => navigate('/products')} className="px-11 py-4 bg-clay text-white border-none rounded-full font-body text-xs tracking-widest uppercase cursor-pointer transition-all duration-300 font-medium hover:bg-[#b56a49] hover:-translate-y-0.5 hover:shadow-clay/40">Shop Now</button>
           <button className="px-11 py-4 bg-transparent text-white border border-white/50 rounded-full font-body text-xs tracking-widest uppercase cursor-pointer transition-all duration-300 font-medium hover:bg-white/10 hover:border-white hover:-translate-y-0.5">Explore Collections</button>
         </div>
       </div>
@@ -260,6 +262,7 @@ function ProductCard({ badge, badgeType, bgColor, icon, name, sub, price, rating
   reviews: number;
   delay: number;
 }) {
+  const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -270,7 +273,7 @@ function ProductCard({ badge, badgeType, bgColor, icon, name, sub, price, rating
 
   return (
     <div className={`reveal reveal-delay-${delay} group`}>
-      <div className="rounded-[20px] overflow-hidden cursor-pointer bg-warm-white transition-all duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-charcoal/10">
+      <div onClick={() => navigate('/products')} className="rounded-[20px] overflow-hidden cursor-pointer bg-warm-white transition-all duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-charcoal/10">
         <div className="relative aspect-square overflow-hidden flex items-center justify-center">
           <div className={`w-full h-full flex items-center justify-center text-[72px] transition-transform duration-500 ease-out group-hover:scale-108 bg-gradient-to-br ${bgColor}`}>
             {icon}
@@ -317,6 +320,7 @@ function ProductCard({ badge, badgeType, bgColor, icon, name, sub, price, rating
 
 // Best Sellers Section
 function BestSellers() {
+  const navigate = useNavigate();
   const products = [
     { badge: 'Bestseller', badgeType: 'bestseller' as const, bgColor: 'from-[#FDE8E0] to-[#F2C4B2]', icon: '🍼', name: 'Bloom Glass Bottle', sub: 'Anti-colic · 4oz & 8oz', price: '$28.00', rating: 5, reviews: 2841, delay: 1 },
     { badge: 'New', badgeType: 'new' as const, bgColor: 'from-[#E0EDD8] to-[#C5DFC0]', icon: '🌿', name: 'Cloud Organic Swaddle', sub: '100% GOTS Certified Cotton', price: '$42.00', rating: 5, reviews: 1203, delay: 2 },

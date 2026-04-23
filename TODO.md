@@ -1,9 +1,22 @@
-# Cart Display Fix - Display from Top ✅
+# Navigation Implementation Plan for Lumi-Baby
 
-## Steps:
-- [x] Create TODO.md with plan breakdown
-- [x] Edit src/pages/cart.tsx: Add `flex flex-col items-start` to cart items parent div and `flex flex-col space-y-5 w-full` to items container
-- [ ] Test localhost:5173/cart - verify items display from top on add/remove
-- [x] Update TODO.md with completion progress
-- [ ] attempt_completion
+## Plan Overview
+- Update Navbar logo link to navigate to Home (/)
+- Update Homepage "Shop Now" button to navigate to /products  
+- Update Homepage product cards (BestSellers) to navigate to /products
 
+## Steps to Complete (0/3)
+
+### [x] Step 1: Update src/components/Navbar.tsx
+Replace logo `<a href="#">` with `<Link to="/">` ✅
+
+### [x] Step 2: Update src/pages/homepage.tsx  
+- Add `useNavigate` import and hook
+- Add onClick to Shop Now button  
+- Add onClick to BestSellers product card wrappers ✅
+
+### [ ] Step 3: Test navigation & complete
+- Verify logo → home
+- Verify Shop Now → /products  
+- Verify product cards → /products
+- Mark all steps complete
