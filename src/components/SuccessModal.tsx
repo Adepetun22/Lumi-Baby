@@ -45,12 +45,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ orderNum, onClose, onContin
           <div className="font-display text-2xl md:text-3xl font-light text-charcoal tracking-tight">
             {orderNum}
           </div>
-          <button 
-            className="ml-3 px-3 py-1.5 rounded-full border border-border text-xs uppercase tracking-widest text-muted hover:border-clay hover:text-clay transition-all font-medium inline-flex items-center gap-1 mt-2"
-            onClick={handleTrackOrder}
-          >
-            Track Order →
-          </button>
         </div>
         
         {/* Perks */}
@@ -72,13 +66,13 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ orderNum, onClose, onContin
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button 
-            className="flex-1 py-4 px-6 rounded-full border-2 border-border bg-transparent font-medium text-sm uppercase tracking-[0.12em] text-charcoal hover:border-clay hover:bg-clay/5 transition-all text-center"
+            className="flex-1 py-4 px-6 rounded-full border-2 border-border bg-transparent font-medium text-sm uppercase tracking-[0.12em] text-charcoal hover:border-clay hover:bg-clay/5 transition-all text-center cursor-pointer"
             onClick={handleContinue}
           >
             Continue Shopping
           </button>
           <button 
-            className="flex-1 py-4 px-6 rounded-full bg-sage-dark text-white font-medium text-sm uppercase tracking-[0.12em] hover:bg-sage-dark/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            className="flex-1 py-4 px-6 rounded-full bg-sage-dark text-white font-medium text-sm uppercase tracking-[0.12em] hover:bg-sage-dark/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
             onClick={onClose}
           >
             View Order Details
@@ -87,7 +81,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ orderNum, onClose, onContin
         
         {/* Close Button */}
         <button 
-          className="absolute top-4 right-4 p-2 text-charcoal/60 hover:text-charcoal transition-colors"
+          className="absolute top-4 right-4 p-2 text-charcoal/60 hover:text-charcoal transition-colors cursor-pointer"
           onClick={onClose}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
