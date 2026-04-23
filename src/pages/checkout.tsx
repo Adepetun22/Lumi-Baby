@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Stepper from '../components/Stepper';
 import { useCart } from '../contexts/CartContext';
 import { ALL_PRODUCTS, getBgGradient } from '../data/products';
+import SuccessModal from '../components/SuccessModal';
 // import { CartContextType } from '../contexts/CartContext'; // Fixed: not exported
 
 function useCustomCursor() {
@@ -76,7 +77,7 @@ interface FormData {
 const Checkout: React.FC = () => {
   const { cursorRef, followerRef } = useCustomCursor();
   const navigate = useNavigate();
-  const { cartCounts, hydrated } = useCart();
+  const { cartCounts, hydrated, setQty } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -98,7 +99,7 @@ const Checkout: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [orderNum, setOrderNum] = useState('');
 
   // Real cart items from context + products
@@ -210,7 +211,7 @@ const Checkout: React.FC = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2200));
     setLoading(false);
-    setShowConfirmation(true);
+    setShowSuccessModal(true);
   };
 
   // Update step content based on currentStep
@@ -497,16 +498,51 @@ const Checkout: React.FC = () => {
           </div>
         );
       case 4:
-
         return (
           <div className="space-y-7">
-            {/* Review content similar to step 2 */}
-            <div className="flex flex-col gap-2.5 pt-2">
-              <button className="btn-place-order w-full disabled:opacity-50 cursor-pointer" disabled={!termsChecked} onClick={placeOrder}>
+            <div className="space-y-2">
+              <div className="text-xs font-medium uppercase tracking-[0.18em] text-clay flex items-center gap-2.5">
+                <div className="w-5 h-px bg-clay" />Step 4 of 4
+              </div>
+              <h1 className="font-display text-[clamp(28px,3vw,42px)] font-normal leading-tight text-charcoal">
+                Review <em className="text-clay italic">Order</em>
+              </h1>
+            </div>
+            {/* Summary */}
+            <div className="space-y-3 bg-warm-white rounded-2xl border border-border p-5">
+              <div className="text-xs uppercase tracking-[0.18em] text-charcoal font-medium pb-2.5 border-b border-border">Order Summary</div>
+              <div className="flex justify-between text-sm"><span className="text-muted">Name</span><span className="font-medium">{formData.firstName} {formData.lastName}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-muted">Email</span><span className="font-medium">{formData.email}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-muted">Ship to</span><span className="font-medium text-right">{formData.addr1}, {formData.city}, {formData.state} {formData.zip}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-muted">Shipping</span><span className="font-medium">{shippingOptions.find(o => o.method === formData.shippingMethod)?.label}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-muted">Payment</span><span className="font-medium capitalize">{formData.payMethod === 'card' ? `Card ending ${(formData.cardNum || '').slice(-4)}` : formData.payMethod}</span></div>
+              <div className="flex justify-between text-sm font-semibold pt-2 border-t border-border"><span>Total</span><span className="text-clay">${total.toFixed(2)}</span></div>
+            </div>
+            {/* Terms */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                className="mt-0.5 w-4 h-4 accent-clay cursor-pointer"
+                checked={termsChecked}
+                onChange={e => setTermsChecked(e.target.checked)}
+              />
+              <span className="text-xs text-muted leading-relaxed">
+                I agree to the <span className="text-clay underline cursor-pointer">Terms &amp; Conditions</span> and <span className="text-clay underline cursor-pointer">Privacy Policy</span>. I confirm my order details are correct.
+              </span>
+            </label>
+            <div className="flex flex-col gap-3 pt-2">
+              <button
+                className="w-full flex items-center justify-center gap-2.5 py-4 rounded-full border-none bg-sage-dark text-white font-body text-xs uppercase tracking-[0.12em] font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                disabled={!termsChecked}
+                onClick={() => void placeOrder()}
+              >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 Place Order
               </button>
-              <button className="btn-back cursor-pointer" onClick={prevStep}>Back to Payment</button>
+              <button className="flex items-center gap-1.5 text-xs uppercase tracking-[0.06em] text-muted hover:text-charcoal transition-colors self-start p-2 bg-transparent border-none cursor-pointer" onClick={prevStep}>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                Back to Payment
+              </button>
             </div>
           </div>
         );
@@ -515,33 +551,21 @@ const Checkout: React.FC = () => {
     }
   };
 
-  if (showConfirmation) {
-    return (
-      <div className="max-w-3xl mx-auto p-12 md:p-20 text-center animate-fade-in">
-        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sage-light to-sage-dark flex items-center justify-center text-4xl mx-auto mb-7 shadow-2xl ring-2 ring-sage/20 ring-offset-4 ring-offset-cream">
-          ✓
-        </div>
-        <div className="inline-block px-4 py-1.5 bg-green-light text-green text-xs uppercase tracking-[0.15em] font-semibold rounded-full mb-4">Order Confirmed</div>
-        <h1 className="font-display text-[clamp(36px,5vw,58px)] font-light leading-tight mb-3">
-          Thank you! Your <em className="text-clay">order</em> is confirmed
-        </h1>
-        {/* Full confirmation UI from HTML ported */}
-        <div className="order-number mt-7 bg-warm-white border border-border rounded-2xl p-5 flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase tracking-[0.18em] text-muted font-semibold mb-2">Order Number</div>
-            <div className="font-display text-3xl font-light text-charcoal tracking-tight">{orderNum}</div>
-          </div>
-          <button className="px-4.5 py-2 rounded-full border-2 border-border text-xs uppercase tracking-[0.1em] text-muted hover:border-clay hover:text-clay transition-all font-body cursor-pointer">
-            Copy
-          </button>
-        </div>
-        {/* Continue shopping, track, perks */}
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen bg-cream pt-[72px]">
+      {showSuccessModal && (
+        <SuccessModal 
+          orderNum={orderNum} 
+          onClose={() => setShowSuccessModal(false)} 
+          onContinueShopping={() => {
+            cartItems.forEach(item => setQty(item.id, 0));
+            void navigate('/');
+          }} 
+        />
+      )}
+
       {/* Custom Cursor */}
       <div ref={cursorRef} className="cursor fixed w-[9px] h-[9px] bg-clay rounded-full pointer-events-none z-[9999] mix-blend-multiply transition-all" />
       <div ref={followerRef} className="cursor-follower fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-[9998] opacity-40 transition-opacity" />
