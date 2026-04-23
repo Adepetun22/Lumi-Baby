@@ -566,7 +566,8 @@ const Checkout: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 max-w-6xl mx-auto px-6 lg:px-12 py-10 pb-20 items-start min-h-[70vh]">
           
           {/* Form Panel */}
-          <div className="form-panel min-w-0 flex flex-col lg:order-2 pt-8">
+          {/* Form Panel */}
+          <div className="min-w-0 flex flex-col lg:order-2 pt-12 pb-20">
             {renderStepContent()}
           </div>
 
