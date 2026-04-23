@@ -193,7 +193,7 @@ const Cart: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-7 px-6 lg:px-12 pb-20 pt-9 max-w-6xl mx-auto">
 
           {/* Cart Items Column */}
-          <div className="order-1 lg:order-1">
+<div className="order-1 lg:order-1 flex flex-col items-start">
             <div className="flex items-center justify-between mb-5">
               <div className="font-display text-3xl font-normal">Cart <span className="text-clay italic">Items</span></div>
               <button className="text-xs text-muted underline hover:text-red transition-colors font-body" onClick={clearCart}>
@@ -212,7 +212,7 @@ const Cart: React.FC = () => {
             </div>
 
             {/* Items */}
-            <div className="space-y-5">
+            <div className="flex flex-col space-y-5 w-full">
               {cartItems.map((item) => (
                 <CartItem key={item.id} item={item} updateQty={updateQty} />
               ))}

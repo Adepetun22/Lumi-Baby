@@ -1,12 +1,9 @@
-# Task Progress: SuccessModal Updates + Navbar Cart Update
+# Cart Display Fix - Display from Top ✅
 
-## Steps to complete:
+## Steps:
+- [x] Create TODO.md with plan breakdown
+- [x] Edit src/pages/cart.tsx: Add `flex flex-col items-start` to cart items parent div and `flex flex-col space-y-5 w-full` to items container
+- [ ] Test localhost:5173/cart - verify items display from top on add/remove
+- [x] Update TODO.md with completion progress
+- [ ] attempt_completion
 
-### 1. ✅ Plan approved
-### 2. ✅ Update SuccessModal.tsx
-   - Hide Track Order button
-   - Add cursor-pointer to all buttons
-
-### 3. Update Navbar cart badge/count after checkout success (clear cart or reset)
-### 4. Test modal and navbar behavior
-### 5. Complete task
