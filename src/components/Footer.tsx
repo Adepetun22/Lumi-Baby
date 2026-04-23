@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/[0.07] pt-7 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-xs">© 2025 Lumi Baby. All rights reserved.</p>
+        <p className="text-xs">© 2026 Lumi Baby. All rights reserved.</p>
         <div>
           <a href="#" className="text-white/40 text-xs no-underline ml-5 hover:text-blush">Privacy Policy</a>
           <a href="#" className="text-white/40 text-xs no-underline ml-5 hover:text-blush">Terms of Service</a>
