@@ -185,6 +185,107 @@
 }
 
 /* ========================================
+   USER DROPDOWN
+   ======================================== */
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background-color: var(--color-cream);
+  border: 1px solid rgba(201, 123, 90, 0.2);
+  border-top: 3px solid var(--color-clay);
+  border-radius: 12px;
+  padding: 1rem 0;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 200;
+}
+
+.user-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Dropdown Header */
+.dropdown-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1.25rem 1rem;
+  text-align: center;
+}
+
+.dropdown-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-blush), var(--color-clay));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.dropdown-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-charcoal);
+  line-height: 1.3;
+}
+
+.dropdown-email {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+/* Dropdown Divider */
+.dropdown-divider {
+  height: 1px;
+  background: rgba(201, 123, 90, 0.15);
+  margin: 0.25rem 1rem 0.5rem;
+}
+
+/* Dropdown Item */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--color-charcoal);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background: var(--color-warm-white);
+  color: var(--color-clay);
+}
+
+.dropdown-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+/* ========================================
    TAILWIND V4 THEME CONFIGURATION
    Using @theme to extend Tailwind with our tokens
    ======================================== */

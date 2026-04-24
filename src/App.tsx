@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -40,10 +41,11 @@ function MainLayout() {
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <ScrollToTop />
-        <Routes>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <ScrollToTop />
+          <Routes>
           {/* Auth page — no Navbar/Footer */}
           <Route path="/auth" element={<Authentication />} />
           
@@ -58,6 +60,7 @@ function App() {
         </Routes>
       </Router>
     </CartProvider>
+    </AuthProvider>
   );
 }
 

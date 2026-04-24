@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface NavbarProps {
   isScrolled: boolean;
@@ -119,6 +120,8 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
 // Mobile Menu Component
 function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { totalCount } = useCart();
+  const auth = useAuth();
+  const navigate = useNavigate();
   return (
     <div className={`fixed inset-0 z-[999] bg-warm-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-9 py-[90px] overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       
@@ -142,9 +145,26 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
       <MobileNavItem label="Toys" onClose={onClose} />
       <MobileNavItem label="Clothing" onClose={onClose} />
       <MobileNavItem label="Gifts" onClose={onClose} />
-      <div className="mt-8 flex gap-4">
-        <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">My Account</a>
-        <a href="#" className="font-display text-lg text-charcoal no-underline py-2 border-none">Cart ({totalCount})</a>
+      <div className="mt-8 flex flex-col gap-3">
+        {auth.isAuthenticated ? (
+          <>
+            <Link to="/auth" onClick={onClose} className="font-display text-lg text-charcoal no-underline py-2 border-none">My Account</Link>
+            <Link to="#" onClick={onClose} className="font-display text-lg text-charcoal no-underline py-2 border-none">Wishlist</Link>
+            <button
+              className="font-display text-lg text-charcoal no-underline py-2 border-none text-left bg-transparent cursor-pointer"
+              onClick={() => {
+                auth.logout();
+                onClose();
+                void navigate('/');
+              }}
+            >
+              Log out
+            </button>
+          </>
+        ) : (
+          <Link to="/auth" onClick={onClose} className="font-display text-lg text-charcoal no-underline py-2 border-none">Log in</Link>
+        )}
+        <Link to="/cart" onClick={onClose} className="font-display text-lg text-charcoal no-underline py-2 border-none">Cart ({totalCount})</Link>
       </div>
     </div>
   );
@@ -152,7 +172,12 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
 
 // Main Navbar Component
 export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setMobileMenuOpen }: NavbarProps) {
-  const { totalCount, uniqueCount } = useCart();
+  const { uniqueCount } = useCart();
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 60);
@@ -160,6 +185,17 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setIsScrolled]);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navBg = isScrolled ? 'bg-cream/95 backdrop-blur-sm shadow-sm' : 'bg-transparent';
   const textColor = isScrolled ? 'text-black' : 'text-black';
@@ -204,12 +240,60 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
             />
           </div>
 
-          {/* User Icon */}
-          <button className="nav-icon">
-            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-            </svg>
-          </button>
+          {/* User Icon with Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <button className="nav-icon" onClick={() => setDropdownOpen(!dropdownOpen)}>
+              {auth.isAuthenticated ? (
+                <div className="w-[22px] h-[22px] rounded-full bg-clay text-white flex items-center justify-center text-[11px] font-medium">
+                  {auth.user?.initial}
+                </div>
+              ) : (
+                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                </svg>
+              )}
+            </button>
+
+            {/* User Dropdown */}
+            <div className={`user-dropdown ${dropdownOpen ? 'show' : ''}`}>
+              {auth.isAuthenticated ? (
+                <>
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">{auth.user?.initial}</div>
+                    <div className="dropdown-name">{auth.user?.name}</div>
+                    <div className="dropdown-email">{auth.user?.email}</div>
+                  </div>
+                  <div className="dropdown-divider" />
+                  <Link to="/auth" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <span className="dropdown-icon">👤</span>
+                    <span>User Profile</span>
+                  </Link>
+                  <Link to="#" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <span className="dropdown-icon">♡</span>
+                    <span>Wishlist</span>
+                  </Link>
+                  <button
+                    className="dropdown-item w-full text-left"
+                    onClick={() => {
+                      auth.logout();
+                      setDropdownOpen(false);
+                      void navigate('/');
+                    }}
+                  >
+                    <span className="dropdown-icon">↪</span>
+                    <span>Log out</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <span className="dropdown-icon">👤</span>
+                    <span>Log in</span>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
 
           {/* Cart Icon */}
           <Link to="/cart" className="nav-icon relative">
@@ -222,7 +306,7 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
           {/* Hamburger */}
           <button 
             className="hamburger"
-            onClick={() => setMobileMenuOpen((o: boolean) => !o)}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <span></span><span></span><span></span>
           </button>

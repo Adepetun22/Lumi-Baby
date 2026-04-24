@@ -1,21 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Mode = "login" | "signup" | "forgot" | "account";
+type Mode = "login" | "signup" | "forgot";
 type StrengthLevel = 0 | 1 | 2 | 3 | 4;
-
-interface FieldState {
-  value: string;
-  error: string;
-  valid: boolean;
-}
-
-interface AccountInfo {
-  name: string;
-  email: string;
-  initial: string;
-}
 
 interface ToastState {
   visible: boolean;
@@ -88,13 +77,6 @@ const CheckCircle = () => (
 const SendIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-  </svg>
-);
-
-const LockIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="3" y="11" width="18" height="11" rx="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
   </svg>
 );
 
@@ -230,6 +212,7 @@ const OrDivider = ({ label }: { label: string }) => (
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function LumiAuth() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [mode, setMode] = useState<Mode>("login");
 
   // ── Toast ──
@@ -290,7 +273,6 @@ export default function LumiAuth() {
   }, []);
 
   // ─── Auth state ──────────────────────────────────────────────────────────
-  const [account, setAccount] = useState<AccountInfo | null>(null);
   const [countdown, setCountdown] = useState(3);
   const [showRedirectBanner, setShowRedirectBanner] = useState(false);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -312,12 +294,12 @@ export default function LumiAuth() {
   const handleAuthSuccess = useCallback(
     (name: string, email: string, type: "login" | "signup") => {
       const initial = name.charAt(0).toUpperCase();
-      setAccount({ name, email, initial });
+      auth.login({ name, email, initial });
       showToast(type === "signup" ? `Welcome to Lumi, ${name}! 🎉` : `Welcome back, ${name}! ✓`, "✦");
       startRedirectCountdown();
       setTimeout(() => navigate("/"), 1200);
     },
-    [showToast, startRedirectCountdown, navigate]
+    [auth, showToast, startRedirectCountdown, navigate]
   );
 
   const handleSocialAuth = useCallback(
@@ -435,7 +417,7 @@ export default function LumiAuth() {
   const goSignup = () => setMode("signup");
 
   const handleSignOut = () => {
-    setAccount(null);
+    auth.logout();
     setMode("login");
     setLoginEmail(""); setLoginPw("");
     showToast("Signed out successfully", "✓");
@@ -717,7 +699,7 @@ export default function LumiAuth() {
             </div>
 
             {/* Mode toggle */}
-            {mode !== "forgot" && mode !== "account" && (
+            {mode !== "forgot" && !auth.isAuthenticated && (
               <div className="mode-toggle">
                 <button className={`mode-btn${mode === "login" ? " active" : ""}`} onClick={goLogin}>Sign In</button>
                 <button className={`mode-btn${mode === "signup" ? " active" : ""}`} onClick={goSignup}>Create Account</button>
@@ -853,11 +835,11 @@ export default function LumiAuth() {
             )}
 
             {/* ── ACCOUNT DASHBOARD ── */}
-            {mode === "account" && account && (
+            {auth.isAuthenticated && auth.user && (
               <div className="account-panel" key="account">
-                <div className="account-avatar">{account.initial}</div>
-                <div className="account-welcome">Welcome back, <em>{account.name}</em></div>
-                <div className="account-email">{account.email}</div>
+                <div className="account-avatar">{auth.user.initial}</div>
+                <div className="account-welcome">Welcome back, <em>{auth.user.name}</em></div>
+                <div className="account-email">{auth.user.email}</div>
                 <div className="account-actions">
                   {[
                     { icon: "🛍", label: "Continue Shopping", href: "/shop", primary: true },
