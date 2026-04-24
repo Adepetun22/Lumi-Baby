@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Mode = "login" | "signup" | "forgot" | "account";
@@ -228,6 +229,7 @@ const OrDivider = ({ label }: { label: string }) => (
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function LumiAuth() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("login");
 
   // ── Toast ──
@@ -313,9 +315,9 @@ export default function LumiAuth() {
       setAccount({ name, email, initial });
       showToast(type === "signup" ? `Welcome to Lumi, ${name}! 🎉` : `Welcome back, ${name}! ✓`, "✦");
       startRedirectCountdown();
-      setTimeout(() => setMode("account"), 600);
+      setTimeout(() => navigate("/"), 1200);
     },
-    [showToast, startRedirectCountdown]
+    [showToast, startRedirectCountdown, navigate]
   );
 
   const handleSocialAuth = useCallback(
@@ -710,7 +712,7 @@ export default function LumiAuth() {
 
             {/* Redirect banner */}
             <div className={`redirect-banner${showRedirectBanner ? " show" : ""}`}>
-              Redirecting you to <strong>your account</strong> in{" "}
+              Redirecting you to <strong>home page</strong> in{" "}
               <span className="redirect-countdown">{countdown}</span>s
             </div>
 
