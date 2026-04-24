@@ -250,7 +250,7 @@ const Checkout: React.FC = () => {
             {/* Forms */}
             <div className="grid gap-3.5 mb-3.5">
               <div className="form-field">
-                <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">
+                <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">
                   Email Address <span className="text-clay">*</span>
                 </label>
                 <input
@@ -265,14 +265,14 @@ const Checkout: React.FC = () => {
               {!formData.isGuest && (
                 <div className="grid grid-cols-2 gap-3.5">
                   <div className="form-field">
-                    <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">
+                    <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">
                       Password <span className="text-clay">*</span>
                     </label>
                     <input type="password" className="input-standard" placeholder="Create a password" value={formData.password || ''} onChange={(e) => updateFormData({ password: e.target.value })} />
                     {errors.password && <div className="text-xs text-red mt-1">{errors.password}</div>}
                   </div>
                   <div className="form-field">
-                    <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">
+                    <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">
                       Confirm Password <span className="text-clay">*</span>
                     </label>
                     <input type="password" className="input-standard" placeholder="Repeat password" value={formData.passwordConfirm || ''} onChange={(e) => updateFormData({ passwordConfirm: e.target.value })} />
@@ -281,19 +281,19 @@ const Checkout: React.FC = () => {
                 </div>
               )}
               <div className="form-field">
-                <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">Phone (optional)</label>
+                <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">Phone (optional)</label>
                 <input type="tel" className="input-standard" placeholder="+1 (555) 000-0000" value={formData.phone} onChange={(e) => updateFormData({ phone: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">
+                  <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">
                     First Name <span className="text-clay">*</span>
                   </label>
                   <input className={`input-standard ${errors.firstName ? 'border-red ring-1 ring-red/10' : ''}`} placeholder="Sarah" value={formData.firstName} onChange={(e) => updateFormData({ firstName: e.target.value })} />
                   {errors.firstName && <div className="text-xs text-red mt-1">{errors.firstName}</div>}
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.1em] text-muted font-medium mb-1.5">
+                  <label className="block text-xs uppercase tracking-widest text-muted font-medium mb-1.5">
                     Last Name <span className="text-clay">*</span>
                   </label>
                   <input className={`input-standard ${errors.lastName ? 'border-red ring-1 ring-red/10' : ''}`} placeholder="Mitchell" value={formData.lastName} onChange={(e) => updateFormData({ lastName: e.target.value })} />
@@ -554,7 +554,7 @@ const Checkout: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="min-h-screen bg-cream pt-18">
       {showSuccessModal && (
         <SuccessModal 
           orderNum={orderNum} 
@@ -567,17 +567,17 @@ const Checkout: React.FC = () => {
       )}
 
       {/* Custom Cursor */}
-      <div ref={cursorRef} className="cursor fixed w-[9px] h-[9px] bg-clay rounded-full pointer-events-none z-[9999] mix-blend-multiply transition-all" />
-      <div ref={followerRef} className="cursor-follower fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-[9998] opacity-40 transition-opacity" />
+      <div ref={cursorRef} className="cursor fixed w-2.25 h-2.25 bg-clay rounded-full pointer-events-none z-9999 mix-blend-multiply transition-all" />
+      <div ref={followerRef} className="cursor-follower fixed w-7.5 h-7.5 border-1.5 border-clay rounded-full pointer-events-none z-9998 opacity-40 transition-opacity" />
       
       {/* Toast */}
-      <div className="toast fixed bottom-7 left-1/2 -translate-x-1/2 -translate-y-3 z-[9100] bg-charcoal text-white px-5.5 py-3 rounded-full text-sm flex items-center gap-2 shadow-2xl opacity-0 invisible transition-all pointer-events-none whitespace-nowrap" id="toast">
+      <div className="toast fixed bottom-7 left-1/2 -translate-x-1/2 -translate-y-3 z-9100 bg-charcoal text-white px-5.5 py-3 rounded-full text-sm flex items-center gap-2 shadow-2xl opacity-0 invisible transition-all pointer-events-none whitespace-nowrap" id="toast">
         ✓ Saved
       </div>
 
       {/* Loading Overlay */}
       {loading && (
-        <div className="loading-overlay fixed inset-0 z-[1000] bg-cream/90 backdrop-blur-sm flex flex-col items-center justify-center opacity-100 pointer-events-auto transition-opacity">
+        <div className="loading-overlay fixed inset-0 z-1000 bg-cream/90 backdrop-blur-sm flex flex-col items-center justify-center opacity-100 pointer-events-auto transition-opacity">
           <div className="w-13 h-13 border-3 border-clay-light border-t-clay rounded-full animate-spin mb-5" />
           <div className="font-display text-2xl font-light text-charcoal mb-2">Placing your order…</div>
           <div className="text-sm text-muted">Please don't close this window</div>
@@ -596,12 +596,12 @@ const Checkout: React.FC = () => {
           </div>
 
           {/* Order Sidebar */}
-          <div className="lg:sticky lg:top-[92px] self-start">
+          <div className="lg:sticky lg:top-23 self-start">
             <div className="sidebar-card bg-warm-white rounded-3xl border border-border overflow-hidden">
               <div className="p-5 border-b border-border">
                 <h2 className="font-display text-2xl font-normal text-charcoal">Your <em className="text-clay">Order</em></h2>
               </div>
-              <div className="max-h-[260px] overflow-y-auto scrollbar-thin scrollbar-thumb-clay-light p-4 border-b border-border">
+              <div className="max-h-65 overflow-y-auto scrollbar-thin scrollbar-thumb-clay-light p-4 border-b border-border">
                 {cartItems.map(item => (
                   <div key={item.id} className="flex items-center gap-3 pb-3 last:pb-0">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 relative ${getBgGradient(item.bg)}`}>
