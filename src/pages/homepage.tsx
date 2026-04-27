@@ -320,7 +320,6 @@ function ProductCard({ badge, badgeType, bgColor, icon, name, sub, price, rating
 
 // Best Sellers Section
 function BestSellers() {
-  const navigate = useNavigate();
   const products = [
     { badge: 'Bestseller', badgeType: 'bestseller' as const, bgColor: 'from-[#FDE8E0] to-[#F2C4B2]', icon: '🍼', name: 'Bloom Glass Bottle', sub: 'Anti-colic · 4oz & 8oz', price: '$28.00', rating: 5, reviews: 2841, delay: 1 },
     { badge: 'New', badgeType: 'new' as const, bgColor: 'from-[#E0EDD8] to-[#C5DFC0]', icon: '🌿', name: 'Cloud Organic Swaddle', sub: '100% GOTS Certified Cotton', price: '$42.00', rating: 5, reviews: 1203, delay: 2 },

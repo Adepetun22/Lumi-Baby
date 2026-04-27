@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState, type ReactNode } from 'react';
 
 interface CartState {
   cartCounts: Record<number, number>;
@@ -73,11 +73,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        Object.entries(parsed.cartCounts).forEach(([idStr, qty]: [string, number]) => {
+        const parsed = JSON.parse(saved) as CartState;
+        Object.entries(parsed.cartCounts).forEach(([idStr, qty]) => {
           dispatch({ type: 'SET' as const, id: Number(idStr), qty });
         });
-      } catch (e) {
+      } catch {
         console.error('Failed to load cart from localStorage');
       }
     }

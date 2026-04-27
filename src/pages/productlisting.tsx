@@ -417,7 +417,7 @@ export default function ProductListing() {
   const [sortBy, setSortBy] = useState('relevance');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-  const { cartCounts, increment, decrement } = useCart();
+  const { increment } = useCart();
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [displayedCount, setDisplayedCount] = useState(12);
   const [isLoading, setIsLoading] = useState(false);
@@ -444,14 +444,6 @@ export default function ProductListing() {
   const displayedProducts = filteredProducts.slice(0, displayedCount);
 
   // Handlers
-  const handleQtyChange = (id: number, delta: number) => {
-    if (delta > 0) {
-      increment(id);
-    } else {
-      decrement(id);
-    }
-  };
-
   const handleWishlistToggle = (_id: number) => {
     // Handle wishlist toggle logic
   };
@@ -522,7 +514,6 @@ export default function ProductListing() {
         product={quickViewProduct} 
         isOpen={!!quickViewProduct} 
         onClose={() => setQuickViewProduct(null)}
-        cartCounts={cartCounts}
         increment={increment}
       />
 

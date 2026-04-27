@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Stepper from '../components/Stepper';
 import { useCart } from '../contexts/CartContext';
@@ -173,10 +173,6 @@ const Checkout: React.FC = () => {
   };
 
   // Step navigation
-  const goToStep = (step: number) => {
-    if (step < currentStep || step <= 4) setCurrentStep(step);
-  };
-
   const nextStep = () => {
     let valid = false;
     switch (currentStep) {
@@ -646,12 +642,6 @@ const Checkout: React.FC = () => {
     </div>
   );
 };
-
-// Utility classes (add to global CSS or Tailwind config)
-const inputClasses = 'w-full p-3.5 rounded-2xl border-2 bg-warm-white font-body text-sm text-charcoal focus:outline-none focus:border-clay focus:ring-1 ring-clay/10 transition-all';
-const btnContinue = 'w-full flex items-center justify-center gap-2.5 py-4 rounded-full border-none bg-clay text-white font-body text-xs tracking-wider font-medium hover:bg-clay-dark transition-all shadow-lg hover:shadow-xl hover:-translate-y-px px-6';
-const btnPlaceOrder = btnContinue.replace('bg-clay', 'bg-sage-dark').replace('hover:bg-clay-dark', 'hover:bg-sage-dark/90');
-const btnBack = 'flex items-center gap-1.5 text-xs tracking-[0.06em] text-muted hover:text-charcoal transition-colors bg-transparent border-none p-2 self-start font-medium';
 
 export default Checkout;
 

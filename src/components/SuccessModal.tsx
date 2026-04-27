@@ -10,10 +10,6 @@ interface SuccessModalProps {
 const SuccessModal: React.FC<SuccessModalProps> = ({ orderNum, onClose, onContinueShopping }) => {
   const navigate = useNavigate();
 
-  const handleTrackOrder = () => {
-    void navigate('/track', { state: { orderNum } });
-  };
-
   const handleContinue = () => {
     onContinueShopping();
     void navigate('/');
