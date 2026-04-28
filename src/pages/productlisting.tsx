@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import FilterSidebar from '../components/Product/FilterSidebar';
 import { useCart } from '../contexts/CartContext';
 import { ALL_PRODUCTS, type Product } from '../data/products';
@@ -337,25 +338,35 @@ function MobileFilterSheet({
 // Active Filter Chips
 function ActiveFilters({ 
   filters, 
+  searchQuery,
   onRemoveCategory,
   onRemovePrice,
   onRemoveAge,
   onRemoveBrand,
-  onRemoveRating
+  onRemoveRating,
+  onRemoveSearch
 }: { 
   filters: FilterState;
+  searchQuery: string;
   onRemoveCategory: () => void;
   onRemovePrice: () => void;
   onRemoveAge: (age: string) => void;
   onRemoveBrand: (brand: string) => void;
   onRemoveRating: (rating: number) => void;
+  onRemoveSearch: () => void;
 }) {
-  const hasFilters = filters.category !== 'All' || filters.maxPrice < 200 || filters.ages.size > 0 || filters.brands.length > 0 || filters.ratings.length > 0;
+  const hasFilters = filters.category !== 'All' || filters.maxPrice < 200 || filters.ages.size > 0 || filters.brands.length > 0 || filters.ratings.length > 0 || searchQuery.length > 0;
 
   if (!hasFilters) return null;
 
   return (
     <div className="flex gap-2 flex-wrap mb-5">
+      {searchQuery.length > 0 && (
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-clay/20 border border-clay/30 rounded-full text-[12px] text-clay font-medium">
+          Search: "{searchQuery}"
+          <button onClick={onRemoveSearch} className="bg-none border-none cursor-pointer text-clay text-[14px] leading-none hover:scale-120 transition-transform">✕</button>
+        </div>
+      )}
       {filters.category !== 'All' && (
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-clay-light border border-clay/20 rounded-full text-[12px] text-clay font-medium">
           {filters.category}
@@ -391,12 +402,16 @@ function ActiveFilters({
 }
 
 // Empty State
-function EmptyState() {
+function EmptyState({ searchQuery }: { searchQuery: string }) {
   return (
     <div className="text-center py-20 px-10 col-span-full">
       <div className="text-[64px] mb-5">🔍</div>
-      <h3 className="font-display text-[28px] font-normal mb-2.5">No products found</h3>
-      <p className="text-muted text-[14px]">Try adjusting your filters</p>
+      <h3 className="font-display text-[28px] font-normal mb-2.5">
+        {searchQuery ? `No results for "${searchQuery}"` : 'No products found'}
+      </h3>
+      <p className="text-muted text-[14px]">
+        {searchQuery ? 'Try a different search term or adjust your filters' : 'Try adjusting your filters'}
+      </p>
     </div>
   );
 }
@@ -405,6 +420,8 @@ function EmptyState() {
 
 export default function ProductListing() {
   const { cursorRef, followerRef } = useCustomCursor();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
   
   const [filters, setFilters] = useState<FilterState>({
     category: 'All',
@@ -430,6 +447,15 @@ export default function ProductListing() {
     if (filters.ages.size > 0 && !filters.ages.has(product.age)) return false;
     if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) return false;
     if (filters.ratings.length > 0 && !filters.ratings.some(r => product.rating >= r)) return false;
+    if (searchQuery) {
+      const term = searchQuery.toLowerCase();
+      const matches = product.name.toLowerCase().includes(term) ||
+        product.desc.toLowerCase().includes(term) ||
+        product.cat.toLowerCase().includes(term) ||
+        product.brand.toLowerCase().includes(term) ||
+        product.age.toLowerCase().includes(term);
+      if (!matches) return false;
+    }
     return true;
   }).sort((a, b) => {
     switch (sortBy) {
@@ -460,6 +486,13 @@ export default function ProductListing() {
       brands: [],
       ratings: [],
     });
+    if (searchQuery) {
+      setSearchParams({});
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchParams({});
   };
 
   // Infinite scroll
@@ -493,7 +526,7 @@ export default function ProductListing() {
   useEffect(() => {
     setDisplayedCount(12);
     setAllLoaded(false);
-  }, [filters, sortBy]);
+  }, [filters, sortBy, searchQuery]);
 
   return (
     <>
@@ -543,7 +576,11 @@ export default function ProductListing() {
           <div className="lg:hidden flex items-center justify-between mb-7 pb-[22px] border-b border-clay/14 flex-wrap gap-3.5">
             <div className="toolbar-left">
               <h1 className="font-display text-[34px] font-light tracking-tight leading-[1.1]">
-                All <em className="italic text-clay">Products</em>
+                {searchQuery ? (
+                  <>Search <em className="italic text-clay">"{searchQuery}"</em></>
+                ) : (
+                  <>All <em className="italic text-clay">Products</em></>
+                )}
               </h1>
               <p className="text-[13px] text-muted mt-1">
                 Showing {Math.min(displayedCount, filteredProducts.length)} of {filteredProducts.length} products
@@ -607,6 +644,7 @@ export default function ProductListing() {
           {/* Active Filters */}
           <ActiveFilters 
             filters={filters}
+            searchQuery={searchQuery}
             onRemoveCategory={() => setFilters(prev => ({ ...prev, category: 'All' }))}
             onRemovePrice={() => setFilters(prev => ({ ...prev, maxPrice: 200 }))}
             onRemoveAge={(age) => {
@@ -616,6 +654,7 @@ export default function ProductListing() {
             }}
             onRemoveBrand={(brand) => setFilters(prev => ({ ...prev, brands: prev.brands.filter(b => b !== brand) }))}
             onRemoveRating={(rating) => setFilters(prev => ({ ...prev, ratings: prev.ratings.filter(r => r !== rating) }))}
+            onRemoveSearch={handleClearSearch}
           />
 
           {/* Product Grid */}
@@ -639,7 +678,7 @@ export default function ProductListing() {
                 </div>
               ))
             ) : (
-              <EmptyState />
+              <EmptyState searchQuery={searchQuery} />
             )}
           </div>
 

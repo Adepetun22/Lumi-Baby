@@ -122,18 +122,46 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
   const { totalCount } = useCart();
   const auth = useAuth();
   const navigate = useNavigate();
+  const [mobileSearchQuery, setMobileSearchQuery] = useState('');
+
+  const handleMobileSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && mobileSearchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(mobileSearchQuery.trim())}`);
+      setMobileSearchQuery('');
+      onClose();
+    }
+  };
+
+  const handleMobileSearchSubmit = () => {
+    if (mobileSearchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(mobileSearchQuery.trim())}`);
+      setMobileSearchQuery('');
+      onClose();
+    }
+  };
+
   return (
     <div className={`fixed inset-0 z-[999] bg-warm-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-9 py-[90px] overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       
       {/* Mobile Search Input */}
       <div className="mobile-search mb-6">
         <div className="flex items-center gap-3 px-4 py-3 rounded-full bg-clay/10 border border-clay/20">
-          <svg className="w-5 h-5 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg 
+            className="w-5 h-5 text-clay cursor-pointer" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2"
+            onClick={handleMobileSearchSubmit}
+          >
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
           </svg>
           <input 
             type="text" 
             placeholder="Search products…" 
+            value={mobileSearchQuery}
+            onChange={(e) => setMobileSearchQuery(e.target.value)}
+            onKeyDown={handleMobileSearch}
             className="bg-transparent border-none outline-none font-body text-base w-full text-charcoal placeholder-muted"
           />
         </div>
@@ -197,6 +225,22 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
+
   const navBg = isScrolled ? 'bg-cream/95 backdrop-blur-sm shadow-sm' : 'bg-transparent';
   const textColor = isScrolled ? 'text-black' : 'text-black';
   const accentColor = isScrolled ? 'text-clay' : 'text-blush';
@@ -229,12 +273,22 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
         <div className="nav-icons">
           {/* Search Bar */}
           <div className={`search-bar items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 ${searchBg}`}>
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg 
+              className="w-4 h-4 cursor-pointer" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              onClick={handleSearchSubmit}
+            >
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
             <input 
               type="text" 
               placeholder="Search products…" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
               className="bg-transparent border-none outline-none font-body text-sm w-36 tracking-wide placeholder-white/60"
               style={{ color: isScrolled ? '#2C2C2C' : 'white' }}
             />
