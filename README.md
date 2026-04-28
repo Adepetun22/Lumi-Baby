@@ -1,3 +1,3 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Lumi Baby is a React + TypeScript + Tailwind CSS e-commerce showcase that prioritizes emotional design and fluid interactivity. Every animation from the custom cursor to the floating hero blobs is intentionally crafted to evoke warmth, trust, and wonder, aligning perfectly with a brand serving new parents and their children.

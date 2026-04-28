@@ -199,6 +199,7 @@ function Ticker() {
 
 // Categories Section
 function Categories() {
+  const navigate = useNavigate();
   const categories = [
     { icon: '🍼', name: 'Feeding', count: '124 products', color: 'from-blush to-clay', mt: '' },
     { icon: '🌿', name: 'Diapering', count: '87 products', color: 'from-sky to-sage', mt: 'lg:mt-10' },
@@ -233,7 +234,10 @@ function Categories() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
           {categories.map((cat, i) => (
             <div key={i} className={`reveal reveal-delay-${(i % 4) + 1}`}>
-              <div className={`rounded-[20px] overflow-hidden cursor-pointer transition-transform duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2.5 aspect-3/4 ${cat.mt}`}>
+              <div
+                onClick={() => navigate(`/products?category=${encodeURIComponent(cat.name)}`)}
+                className={`rounded-[20px] overflow-hidden cursor-pointer transition-transform duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2.5 aspect-3/4 ${cat.mt}`}
+              >
                 <div className={`w-full h-full flex flex-col items-center justify-end p-5 bg-gradient-to-br ${cat.color} relative`}>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"></div>
                   <span className="text-[40px] mb-2.5 relative z-10">{cat.icon}</span>

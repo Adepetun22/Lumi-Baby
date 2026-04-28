@@ -424,9 +424,9 @@ export default function ProductListing() {
   const searchQuery = searchParams.get('search') || '';
   
   const [filters, setFilters] = useState<FilterState>({
-    category: 'All',
+    category: searchParams.get('category') || 'All',
     maxPrice: 200,
-    ages: new Set(['0–3 mo']),
+    ages: new Set(),
     brands: [],
     ratings: [],
   });
@@ -482,7 +482,7 @@ export default function ProductListing() {
     setFilters({
       category: 'All',
       maxPrice: 200,
-      ages: new Set(['0–3 mo']),
+      ages: new Set(),
       brands: [],
       ratings: [],
     });
@@ -521,6 +521,17 @@ export default function ProductListing() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoading, allLoaded, filteredProducts.length]);
+
+  // Sync category filter with URL query param
+  useEffect(() => {
+    const urlCategory = searchParams.get('category');
+    if (urlCategory && urlCategory !== filters.category) {
+      setFilters(prev => ({ ...prev, category: urlCategory }));
+    } else if (!urlCategory && filters.category !== 'All') {
+      setFilters(prev => ({ ...prev, category: 'All' }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get('category')]);
 
   // Reset displayed count when filters change
   useEffect(() => {

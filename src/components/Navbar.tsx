@@ -11,14 +11,20 @@ interface NavbarProps {
 }
 
 // Nav Item with Mega Menu
-function NavItem({ label, isScrolled, children }: { label: string; isScrolled: boolean; children?: React.ReactNode }) {
+function NavItem({ label, to, isScrolled, children }: { label: string; to?: string; isScrolled: boolean; children?: React.ReactNode }) {
   const textColor = isScrolled ? 'text-black' : 'text-black';
 
   return (
     <div className="nav-item">
-      <div className={`relative text-xs tracking-widest uppercase cursor-pointer py-2 transition-colors duration-300 font-medium ${textColor} hover:text-clay`}>
-        {label}
-      </div>
+      {to ? (
+        <Link to={to} className={`relative text-xs tracking-widest uppercase cursor-pointer py-2 transition-colors duration-300 font-medium ${textColor} hover:text-clay no-underline block`}>
+          {label}
+        </Link>
+      ) : (
+        <div className={`relative text-xs tracking-widest uppercase cursor-pointer py-2 transition-colors duration-300 font-medium ${textColor} hover:text-clay`}>
+          {label}
+        </div>
+      )}
       {children && (
         <div className="mega-menu">
           {children}
@@ -30,6 +36,9 @@ function NavItem({ label, isScrolled, children }: { label: string; isScrolled: b
 
 // Mega Menu Content
 function MegaMenu({ type = 'feeding' }: { type?: 'feeding' | 'diapering' | 'nursery' }) {
+  const categoryMap = { feeding: 'Feeding', diapering: 'Diapering', nursery: 'Nursery' };
+  const category = categoryMap[type];
+
   const content = {
     feeding: [
       { title: 'Breast Feeding', items: ['Breast Pumps', 'Nursing Pads', 'Nipple Cream', 'Nursing Bras'] },
@@ -54,7 +63,13 @@ function MegaMenu({ type = 'feeding' }: { type?: 'feeding' | 'diapering' | 'nurs
         <div key={i} className="mega-col">
           <h4 className="font-display text-lg font-medium text-clay mb-3.5 border-b border-clay/20 pb-2">{col.title}</h4>
           {col.items.map((item, j) => (
-            <a key={j} href="#" className="block text-sm text-muted no-underline py-1 transition-all duration-200 hover:text-clay hover:pl-1.5">{item}</a>
+            <Link
+              key={j}
+              to={`/products?category=${encodeURIComponent(category)}&search=${encodeURIComponent(item)}`}
+              className="block text-sm text-muted no-underline py-1 transition-all duration-200 hover:text-clay hover:pl-1.5"
+            >
+              {item}
+            </Link>
           ))}
         </div>
       ))}
@@ -63,8 +78,10 @@ function MegaMenu({ type = 'feeding' }: { type?: 'feeding' | 'diapering' | 'nurs
 }
 
 // Mobile Nav Item with optional accordion mega menu
-function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?: 'feeding' | 'diapering' | 'nursery'; onClose: () => void }) {
+function MobileNavItem({ label, to, megaType, onClose }: { label: string; to?: string; megaType?: 'feeding' | 'diapering' | 'nursery'; onClose: () => void }) {
   const [open, setOpen] = useState(false);
+  const categoryMap = { feeding: 'Feeding', diapering: 'Diapering', nursery: 'Nursery' };
+  const category = megaType ? categoryMap[megaType] : null;
 
   const content = {
     feeding: [
@@ -85,7 +102,13 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
   };
 
   if (!megaType) {
-    return (
+    return to ? (
+      <Link
+        to={to}
+        onClick={onClose}
+        className={`block font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
+      >{label}</Link>
+    ) : (
       <a
         href="#"
         onClick={onClose}
@@ -96,19 +119,37 @@ function MobileNavItem({ label, megaType, onClose }: { label: string; megaType?:
 
   return (
     <div>
-      <button
-        onClick={() => setOpen(o => !o)}
-        className={`mobile-nav-btn w-full flex items-center justify-between font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
-      >
-        {label}
-        <span className={`text-clay text-2xl transition-transform duration-300 flex-shrink-0 ${open ? 'rotate-45' : ''}`}>+</span>
-      </button>
+      {to ? (
+        <Link
+          to={to}
+          onClick={onClose}
+          className={`mobile-nav-btn w-full flex items-center justify-between font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
+        >
+          {label}
+          <span className={`text-clay text-2xl transition-transform duration-300 flex-shrink-0 ${open ? 'rotate-45' : ''}`}>+</span>
+        </Link>
+      ) : (
+        <button
+          onClick={() => setOpen(o => !o)}
+          className={`mobile-nav-btn w-full flex items-center justify-between font-display text-3xl font-light no-underline py-3 border-b border-charcoal/5 transition-colors duration-200 cursor-pointer ${open ? 'text-clay pl-2' : 'text-charcoal'}`}
+        >
+          {label}
+          <span className={`text-clay text-2xl transition-transform duration-300 flex-shrink-0 ${open ? 'rotate-45' : ''}`}>+</span>
+        </button>
+      )}
       <div className={`overflow-hidden transition-all duration-400 ease-in-out ${open ? 'max-h-[600px] pb-4' : 'max-h-0'}`}>
         {content[megaType].map((col, i) => (
           <div key={i} className="mb-4">
             <h4 className="font-display text-base font-medium text-clay mb-2 border-b border-clay/20 pb-1">{col.title}</h4>
             {col.items.map((item, j) => (
-              <a key={j} href="#" className="block text-sm text-muted no-underline py-1 transition-all duration-200 hover:text-clay hover:pl-1.5">{item}</a>
+              <Link
+                key={j}
+                to={`/products?category=${encodeURIComponent(category!)}&search=${encodeURIComponent(item)}`}
+                onClick={onClose}
+                className="block text-sm text-muted no-underline py-1 transition-all duration-200 hover:text-clay hover:pl-1.5"
+              >
+                {item}
+              </Link>
             ))}
           </div>
         ))}
@@ -167,12 +208,12 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
         </div>
       </div>
       
-      <MobileNavItem label="Feeding" megaType="feeding" onClose={onClose} />
-      <MobileNavItem label="Diapering" megaType="diapering" onClose={onClose} />
-      <MobileNavItem label="Nursery" megaType="nursery" onClose={onClose} />
-      <MobileNavItem label="Toys" onClose={onClose} />
-      <MobileNavItem label="Clothing" onClose={onClose} />
-      <MobileNavItem label="Gifts" onClose={onClose} />
+      <MobileNavItem label="Feeding" to="/products?category=Feeding" megaType="feeding" onClose={onClose} />
+      <MobileNavItem label="Diapering" to="/products?category=Diapering" megaType="diapering" onClose={onClose} />
+      <MobileNavItem label="Nursery" to="/products?category=Nursery" megaType="nursery" onClose={onClose} />
+      <MobileNavItem label="Toys" to="/products?category=Toys" onClose={onClose} />
+      <MobileNavItem label="Clothing" to="/products?category=Clothing" onClose={onClose} />
+      <MobileNavItem label="Gifts" to="/products?category=Gifts" onClose={onClose} />
       <div className="mt-8 flex flex-col gap-3">
         {auth.isAuthenticated ? (
           <>
@@ -255,18 +296,18 @@ export default function Navbar({ isScrolled, setIsScrolled, mobileMenuOpen, setM
 
         {/* Desktop Navigation */}
         <div className="nav-center">
-          <NavItem label="Feeding" isScrolled={isScrolled}>
+          <NavItem label="Feeding" to="/products?category=Feeding" isScrolled={isScrolled}>
             <MegaMenu />
           </NavItem>
-          <NavItem label="Diapering" isScrolled={isScrolled}>
+          <NavItem label="Diapering" to="/products?category=Diapering" isScrolled={isScrolled}>
             <MegaMenu type="diapering" />
           </NavItem>
-          <NavItem label="Nursery" isScrolled={isScrolled}>
+          <NavItem label="Nursery" to="/products?category=Nursery" isScrolled={isScrolled}>
             <MegaMenu type="nursery" />
           </NavItem>
-          <NavItem label="Toys" isScrolled={isScrolled} />
-          <NavItem label="Clothing" isScrolled={isScrolled} />
-          <NavItem label="Gifts" isScrolled={isScrolled} />
+          <NavItem label="Toys" to="/products?category=Toys" isScrolled={isScrolled} />
+          <NavItem label="Clothing" to="/products?category=Clothing" isScrolled={isScrolled} />
+          <NavItem label="Gifts" to="/products?category=Gifts" isScrolled={isScrolled} />
         </div>
 
         {/* Nav Icons */}
