@@ -507,17 +507,17 @@ function Blog() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {blogs.map((blog, i) => (
-          <div key={i} className={`reveal ${i === 0 ? 'reveal-delay-1' : `reveal-delay-${(i % 3) + 1}`}`}>
+          <div key={i} className={`reveal group ${i === 0 ? 'reveal-delay-1' : `reveal-delay-${(i % 3) + 1}`}`}>
             <div className="rounded-[20px] overflow-hidden cursor-pointer bg-warm-white transition-all duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5">
               <div className="relative aspect-[16/10] overflow-hidden">
-                <div className={`w-full h-full flex items-center justify-center ${blog.bg} transition-transform duration-500 ease-out hover:scale-106 ${blog.size}`}>
+                <div className={`w-full h-full flex items-center justify-center ${blog.bg} transition-transform duration-500 ease-out group-hover:scale-106 ${blog.size}`}>
                   {blog.icon}
                 </div>
                 <span className="absolute bottom-3.5 left-3.5 bg-white text-clay text-xs tracking-widest uppercase px-3 py-1 rounded-full font-medium">{blog.tag}</span>
               </div>
               <div className="p-6">
                 <div className="text-xs text-muted tracking-wider mb-2.5">{blog.date}</div>
-                <h3 className={`font-display font-normal text-charcoal leading-snug mb-3 ${i === 0 ? 'text-2xl' : 'text-xl'}`}>{blog.title}</h3>
+                <h3 className="font-display font-normal text-charcoal leading-snug mb-3 text-xl sm:text-2xl">{blog.title}</h3>
                 <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-2">{blog.excerpt}</p>
                 <a href="#" className="inline-flex items-center gap-1.5 text-xs tracking-widest uppercase text-clay no-underline border-b border-current pb-0.5">Read Article →</a>
               </div>
